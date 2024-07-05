@@ -8,12 +8,14 @@ from rtmidi.midiutil import open_midioutput
 from rtmidi.midiconstants import NOTE_OFF, NOTE_ON
 from rtmidi.midiconstants import (CONTROL_CHANGE)
 
-with open('totalmix_midi_mapping - matrix.csv') as f:
+with open('totalmix_midi_learn - matrix.csv') as f:
     matrix = list(csv.DictReader(f, delimiter=','))
     output_CH_dict = matrix[2]
     output_CC_dict = matrix[3]
     output_submix_dict = matrix[4]
-    print(output_submix_dict)
+    output_solo_dict = matrix[5]
+    output_mute_dict = matrix[6]
+    print(output_mute_dict)
 
 submix_previous = 1
 
@@ -88,22 +90,46 @@ try:
                         for key, value in routing_dict.items():
 
                             if value:
+                                print(key, value)
+                                output_ch = int(output_CH_dict[key])
 
-                                print("Submix -> {}".format(output_submix_dict[value]))
-                                print("Output -> Channel: {} CC: {} Value: {} \n".format(output_CH_dict[key], output_CC_dict[key], message[2] ))
+
+                                if value == "S" or value == "M":
+                                    print("S or M")
+                                    if value == "S":
+                                        output_CC_or_Note = int(output_solo_dict[key], 16)
+
+                                    if value == "M":
+                                        output_CC_or_Note = int(output_mute_dict[key], 16)
+
+                                    msgout = ([NOTE_OFF | output_ch, output_CC_or_Note, 0])
+
+                                    print("Output -> Channel: {} NOTE: {} Value: {} \n".format(output_ch,output_CC_or_Note,0))
+
+                                else:
+                                    print("Else")
+                                    print(output_CC_dict[key])
+                                    output_CC_or_Note = int(output_CC_dict[key])
+                                    msgout = ([CONTROL_CHANGE | output_ch, output_CC_or_Note, message[2]])
+                                    print("Output -> Channel: {} CC: {} Value: {} \n".format(output_ch,output_CC_or_Note,message[2]))
 
                                 submix = [int(ele, 16) for ele in output_submix_dict[value].split(",")]
-                                print(submix)
+                                print("Submix -> {}".format(output_submix_dict[value]))
+
                                 if submix != submix_previous:
                                     print("Change Submix to {} {}".format(value, submix))
                                     midiout.send_message(submix)
                                     submix_previous = submix
 
-                                output_ch = int(output_CH_dict[key])
-                                output_cc = int(output_CC_dict[key])
-                                msgout = ([CONTROL_CHANGE | output_ch, output_cc, message[2]])
+
+
+
+
+
+
+                                print(msgout)
                                 midiout.send_message(msgout)
-                                # print("{} {} -> {} {}".format(input_label, message, output_label, msgout))
+
                         break
 
         time.sleep(0.0025)
