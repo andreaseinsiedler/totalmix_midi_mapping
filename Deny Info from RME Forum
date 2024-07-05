@@ -1,0 +1,157 @@
+https://www.forum.rme-audio.de/viewtopic.php?id=24437
+
+
+
+GLOBAL
+MIDI Channel 1
+Note G 1   : Global Solo
+Note Ab 1  : Global Mute
+Note A 1   : Show Trim
+
+Note Gb 2  : Mix 1
+Note G 2   : Mix 2
+Note Ab 2  : Mix 3
+Note A 2   : Mix 4
+Note Bb 2  : Mix 5
+Note B 2   : Mix 6
+Note C 3   : Mix 7
+Note Db 3  : Mix 8
+
+==============================================================================
+Note E 1   : Cycle Section Selection for Mute / Solo Actions (*)
+Note F 1   : Cycle Section Selection for Mute / Solo Actions (*)
+==============================================================================
+The following section depends on the selected section using F 1 / E 1 notes as described above
+(Hardware Inputs, Playback, Hardware Outputs). I find this way of controlling mute and solo rather cumbersome, but since I've discovered how it works here it is.
+==============================================================================
+    - HW Inputs
+    Note Ab -2 : AS 1 Solo
+    Note A -2  : AS 2 Solo
+    Note Bb -2 : ADAT 3 Solo
+    Note B -2  : ADAT 4 Solo
+    Note C -1  : ADAT 5 Solo
+    Note Db -1 : ADAT 6 Solo
+    Note D -1  : ADAT 7 Solo
+    Note Eb -1 : ADAT 8 Solo
+    Note E -1  : AS 1 Mute
+    Note F -1  : AS 2 Mute
+    Note Gb -1 : ADAT 3 Mute
+    Note G -1  : ADAT 4 Mute
+    Note Ab -1 : ADAT 5 Mute
+    Note A -1  : ADAT 6 Mute
+    Note Bb -1 : ADAT 7 Mute
+    Note B -1  : ADAT 8 Mute
+
+    - Playback
+    Note Ab -2 : SPDIF Solo
+    Note A -2  : AS 1 Solo
+    Note Bb -2 : AS 2 Solo
+    Note B -2  : ADAT 3 Solo
+    Note C -1  : ADAT 4 Solo
+    Note Db -1 : ADAT 5 Solo
+    Note D -1  : ADAT 6 Solo
+    Note Eb -1 : ADAT 7/8 Solo
+    Note E -1  : SPDIF Mute
+    Note F -1  : AS 1 Mute
+    Note Gb -1 : AS 2 Mute
+    Note G -1  : ADAT 3 Mute
+    Note Ab -1 : ADAT 4 Mute
+    Note A -1  : ADAT 5 Mute
+    Note Bb -1 : ADAT 6 Mute
+    Note B -1  : ADAT 7/8 Mute
+
+    - HW Outputs
+    Note E -1  : AS 1 Mute
+    Note F -1  : AS 2 Mute
+    Note Gb -1 : ADAT 3 Mute
+    Note G -1  : ADAT 4 Mute
+    Note Ab -1 : ADAT 5 Mute
+    Note A -1  : ADAT 6 Mute
+    Note Bb -1 : ADAT 7/8 Mute   
+==============================================================================
+
+
+HARDWARE INPUTS
+MIDI Channel 1
+CC16 : Mic 1 Pan : Left (-) 63 (+) Right
+CC17 : Mic 2 Pan : Left (-) 63 (+) Right
+CC18 : AN 3 Pan : Left (-) 63 (+) Right
+CC19 : AN 4 Pan : Left (-) 63 (+) Right
+CC20 : AN 5 Pan : Left (-) 63 (+) Right
+CC21 : AN 6 Pan : Left (-) 63 (+) Right
+CC22 : AN 7 Pan : Left (-) 63 (+) Right
+CC23 : AN 8 Pan : Left (-) 63 (+) Right
+
+CC102 : Mic 1 Fader : 0 - 127
+CC103 : Mic 2 Fader : 0 - 127
+CC104 : AN 3 Fader : 0 - 127
+CC105 : AN 4 Fader : 0 - 127
+CC106 : AN 5 Fader : 0 - 127
+CC107 : AN 6 Fader : 0 - 127
+CC108 : AN 7 Fader : 0 - 127
+CC109 : AN 8 Fader : 0 - 127
+CC110 : SPDIF L Fader : 0 - 127
+CC111 : SPDIF R Fader : 0 - 127
+CC112 : AS 1 Fader : 0 - 127
+CC113 : AS 2 Fader : 0 - 127
+CC114 : ADAT 3 Fader : 0 - 127
+CC115 : ADAT 4 Fader : 0 - 127
+CC116 : ADAT 5 Fader : 0 - 127
+CC117 : ADAT 6 Fader : 0 - 127
+
+MIDI Channel 2
+CC102 : ADAT 7 Fader : 0 - 127
+CC103 : ADAT 8 Fader : 0 - 127
+
+
+SOFTWARE PLAYBACK
+MIDI Channel 5
+CC102 : AN 1 Fader : 0 - 127
+CC103 : AN 2 Fader : 0 - 127
+CC104 : AN 3 Fader : 0 - 127
+CC105 : AN 4 Fader : 0 - 127
+CC106 : AN 5 Fader : 0 - 127
+CC107 : AN 6 Fader : 0 - 127
+CC108 : AN 7 Fader : 0 - 127
+CC109 : AN 8 Fader : 0 - 127
+CC110 : SPDIF L Fader : 0 - 127
+CC111 : SPDIF R Fader : 0 - 127
+CC112 : AS 1 Fader : 0 - 127
+CC113 : AS 2 Fader : 0 - 127
+CC114 : ADAT 3 Fader : 0 - 127
+CC115 : ADAT 4 Fader : 0 - 127
+CC116 : ADAT 5 Fader : 0 - 127
+CC117 : ADAT 6 Fader : 0 - 127
+
+MIDI Channel 6
+CC102 : ADAT 7 Fader : 0 - 127
+CC103 : ADAT 8 Fader : 0 - 127
+
+
+HARDWARE OUTPUTS
+MIDI Channel 1
+Note Gb 1  : Main Mono
+Note D 2   : Speaker B
+Note A 5   : Main Dim
+
+MIDI Channel 9
+CC102 : AN 1 Fader : 0 - 127
+CC103 : AN 2 Fader : 0 - 127
+CC104 : AN 3 Fader : 0 - 127
+CC105 : AN 4 Fader : 0 - 127
+CC106 : AN 5 Fader : 0 - 127
+CC107 : AN 6 Fader : 0 - 127
+CC108 : AN 7 Fader : 0 - 127
+CC109 : AN 8 Fader : 0 - 127
+CC110 : SPDIF L Fader : 0 - 127
+CC111 : SPDIF R Fader : 0 - 127
+CC112 : AS 1 Fader : 0 - 127
+CC113 : AS 2 Fader : 0 - 127
+CC114 : ADAT 3 Fader : 0 - 127
+CC115 : ADAT 4 Fader : 0 - 127
+CC116 : ADAT 5 Fader : 0 - 127
+CC117 : ADAT 6 Fader : 0 - 127
+
+MIDI Channel 10
+CC102 : ADAT 7 Fader : 0 - 127
+CC103 : ADAT 8 Fader : 0 - 127
