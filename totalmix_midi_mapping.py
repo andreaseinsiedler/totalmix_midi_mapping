@@ -17,7 +17,7 @@ with open('totalmix_midi_learn - matrix.csv') as f:
     output_submix_dict = matrix[4]
     output_solo_dict = matrix[5]
     output_mute_dict = matrix[6]
-    print(output_mute_dict)
+    #print(output_mute_dict)
 
 submix_previous = 1
 
@@ -30,11 +30,11 @@ submix_previous = 1
 # is given as the first argument on the command line.
 # API backend defaults to ALSA on Linux.
 
-#port = sys.argv[1] if len(sys.argv) > 1 else None
+port = sys.argv[1] if len(sys.argv) > 1 else None
 
 try:
-   # midiin, port_name_in = open_midiinput(port)
-    midiin, port_name_in = open_midiinput(0)
+    midiin, port_name_in = open_midiinput(port)
+    #midiin, port_name_in = open_midiinput(0)
     port_name_in1 = port_name_in
 
 
@@ -45,11 +45,11 @@ except (EOFError, KeyboardInterrupt):
 
 #Second Midi Input for TotalMix Response
 
-#port = sys.argv[1] if len(sys.argv) > 1 else None
+port = sys.argv[1] if len(sys.argv) > 1 else None
 
 try:
-    # midiin, port_name_in = open_midiinput(port)
-    midiin1, port_name_in = open_midiinput(5)
+    midiin1, port_name_in = open_midiinput(port)
+    #midiin1, port_name_in = open_midiinput(5)
     port_name_in = port_name_in
 
 
@@ -69,11 +69,11 @@ midiin1.ignore_types(sysex=False)
 # is given as the first argument on the command line.
 # API backend defaults to ALSA on Linux.
 
-#port = sys.argv[1] if len(sys.argv) > 1 else None
+port = sys.argv[1] if len(sys.argv) > 1 else None
 
 try:
-    #midiout, port_name_out = open_midioutput(port)
-    midiout, port_name_out = open_midioutput(5)
+    midiout, port_name_out = open_midioutput(port)
+    #midiout, port_name_out = open_midioutput(5)
 except (EOFError, KeyboardInterrupt):
     sys.exit()
 
