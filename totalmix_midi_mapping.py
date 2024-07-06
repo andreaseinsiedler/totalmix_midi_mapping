@@ -2,13 +2,12 @@ import logging
 import sys
 import time
 import csv
+import os
 
 from rtmidi.midiutil import open_midiinput
 from rtmidi.midiutil import open_midioutput
 from rtmidi.midiconstants import NOTE_OFF, NOTE_ON
 from rtmidi.midiconstants import (CONTROL_CHANGE)
-
-
 
 def banking(row):
 
@@ -52,9 +51,14 @@ def banking(row):
 
         time.sleep(0.0025)
 
+if getattr(sys, 'frozen', False):
+    # we are running in a bundle
+    bundle_dir = os.path.dirname(sys.executable)
+else:
+    # we are running in a normal Python environment
+    bundle_dir = os.path.dirname(os.path.abspath(__file__))
 
-
-with open('totalmix_midi_learn - matrix.csv') as f:
+with open(os.path.join(bundle_dir, 'totalmix_midi_learn - matrix.csv')) as f:
     matrix = list(csv.DictReader(f, delimiter=','))
 
 output_CH_dict = matrix[2]
@@ -83,8 +87,8 @@ lcd_header = [240, 0, 0, 102, 20, 18]
 port = sys.argv[1] if len(sys.argv) > 1 else None
 
 try:
-    #midiin_0, port_name_in_0 = open_midiinput(port)
-    midiin_0, port_name_in_0 = open_midiinput(0)
+    midiin_0, port_name_in_0 = open_midiinput(port)
+    #midiin_0, port_name_in_0 = open_midiinput(0)
 
 except (EOFError, KeyboardInterrupt):
     sys.exit()
@@ -94,8 +98,8 @@ except (EOFError, KeyboardInterrupt):
 port = sys.argv[1] if len(sys.argv) > 1 else None
 
 try:
-    #midiin_1, port_name_in_1 = open_midiinput(port)
-    midiin_1, port_name_in_1 = open_midiinput(7)
+    midiin_1, port_name_in_1 = open_midiinput(port)
+    #midiin_1, port_name_in_1 = open_midiinput(7)
     midiin_1.ignore_types(sysex=False)
 
 except (EOFError, KeyboardInterrupt):
@@ -113,8 +117,8 @@ except (EOFError, KeyboardInterrupt):
 port = sys.argv[1] if len(sys.argv) > 1 else None
 
 try:
-    #midiout, port_name_out = open_midioutput(port)
-    midiout, port_name_out = open_midioutput(7)
+    midiout, port_name_out = open_midioutput(port)
+    #midiout, port_name_out = open_midioutput(7)
 
 except (EOFError, KeyboardInterrupt):
     sys.exit()
