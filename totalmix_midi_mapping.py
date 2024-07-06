@@ -8,6 +8,52 @@ from rtmidi.midiutil import open_midioutput
 from rtmidi.midiconstants import NOTE_OFF, NOTE_ON
 from rtmidi.midiconstants import (CONTROL_CHANGE)
 
+
+
+def banking(row):
+
+    #row = "Ou"
+    send = True
+    command = 0x28
+
+    while True:
+
+        if send:
+
+            msgout = ([NOTE_OFF | 0, command, 0])
+
+            midiout.send_message(msgout)
+
+            send = False
+
+
+
+        msg1 = midiin_1.get_message()
+
+
+
+        if msg1:
+
+            message, deltatime = msg1
+
+            if lcd_header == message[:6]:
+
+                ascii_char = ""
+                for num in message[7:-1]: ascii_char += chr(num)
+
+
+                print("LCD Text -> ", ascii_char, "\n")
+
+                if ascii_char[:2] == row[:2]:
+                    break
+
+                else:
+                    send = True
+
+        time.sleep(0.0025)
+
+
+
 with open('totalmix_midi_learn - matrix.csv') as f:
     matrix = list(csv.DictReader(f, delimiter=','))
 
@@ -16,6 +62,8 @@ output_CC_dict = matrix[3]
 output_submix_dict = matrix[4]
 output_solo_dict = matrix[5]
 output_mute_dict = matrix[6]
+output_LCD_dict = matrix[7]
+output_bank_dict = matrix[8]
 #print(output_mute_dict)
 
 submix_prev = 1
@@ -90,7 +138,7 @@ try:
             message, deltatime = msg0
 
             send = True
-            banking = False
+
 
             timer += deltatime
             #print("[%s] @%0.6f %r" % (port_name_in, timer, message))
@@ -113,7 +161,7 @@ try:
 
                             if value:
 
-                                output_ch = int(output_CH_dict[key])-1
+                                output_ch = int(output_CH_dict[key])
                                 submix = [int(ele, 16) for ele in output_submix_dict[value].split(",")]
 
                                 if value == "Send":
@@ -156,14 +204,33 @@ try:
 
                                 elif value == "S" or value == "M":
 
+                                    totalmix_row = output_LCD_dict[key]
+                                    output_ch = 0
+
+                                    banking(totalmix_row)
+
                                     if value == "S": output_CC_or_Note = int(output_solo_dict[key], 16)
 
                                     elif value == "M": output_CC_or_Note = int(output_mute_dict[key], 16)
 
                                     output_type = "Note_Off"
                                     output_value = 0
+                                    bank = int(output_bank_dict[key])
+
+
+
 
                                     msgout = ([NOTE_OFF | output_ch, output_CC_or_Note, output_value])
+
+
+
+
+
+
+
+
+
+
 
                                 else:
 
