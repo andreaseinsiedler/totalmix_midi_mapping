@@ -26,34 +26,34 @@ def banking(row, ascii_char_old):
         if send:
 
             if row[:2] == "In" and ascii_char_old[:2] == "Pb":
-                msgout = ([NOTE_OFF | 0, command_dn, 0])
-                print("command_dn")
-                break
-
-            elif row[:2] == "In" and ascii_char_old[:2] == "Ou":
                 msgout = ([NOTE_OFF | 0, command_up, 0])
                 print("command_up")
-                break
+
+
+            elif row[:2] == "In" and ascii_char_old[:2] == "Ou":
+                msgout = ([NOTE_OFF | 0, command_dn, 0])
+                print("command_dn")
+
 
             elif row[:2] == "Pb" and ascii_char_old[:2] == "In":
                 msgout = ([NOTE_OFF | 0, command_dn, 0])
                 print("command_dn")
-                break
+
 
             elif row[:2] == "Pb" and ascii_char_old[:2] == "Ou":
-                msgout = ([NOTE_OFF | 0, command_dn, 0])
-                print("command_dn")
-                break
+                msgout = ([NOTE_OFF | 0, command_up, 0])
+                print("command_up")
+
 
             elif row[:2] == "Ou" and ascii_char_old[:2] == "In":
-                msgout = ([NOTE_OFF | 0, command_dn, 0])
-                print("command_dn")
-                break
+                msgout = ([NOTE_OFF | 0, command_up, 0])
+                print("command_up")
+
 
             elif row[:2] == "Ou" and ascii_char_old[:2] == "Pb":
-                msgout = ([NOTE_OFF | 0, command_up, 0])
+                msgout = ([NOTE_OFF | 0, command_dn, 0])
                 print("command_dn")
-                break
+
 
             else:
                 msgout = ([NOTE_OFF | 0, command_up, 0])
@@ -72,7 +72,7 @@ def banking(row, ascii_char_old):
 
             if lcd_header == message[:6]:
 
-                #ascii_char = ""
+                ascii_char = ""
                 for num in message[7:-1]: ascii_char += chr(num)
 
                 print("banking - ascii_char", ascii_char, "\n")
@@ -140,7 +140,7 @@ port = sys.argv[1] if len(sys.argv) > 1 else None
 
 try:
     #midiin_0, port_name_in_0 = open_midiinput(port)
-    midiin_0, port_name_in_0 = open_midiinput(0)
+    midiin_0, port_name_in_0 = open_midiinput(1)
 
 except (EOFError, KeyboardInterrupt):
     sys.exit()
@@ -154,8 +154,54 @@ port = sys.argv[1] if len(sys.argv) > 1 else None
 
 try:
     #midiin_1, port_name_in_1 = open_midiinput(port)
-    midiin_1, port_name_in_1 = open_midiinput(4)
+    midiin_1, port_name_in_1 = open_midiinput(2)
     midiin_1.ignore_types(sysex=False)
+
+except (EOFError, KeyboardInterrupt):
+    sys.exit()
+
+ledmode = False
+
+if ledmode:
+
+    #Midi Output to external
+
+    #log = logging.getLogger('midiout')
+    #logging.basicConfig(level=logging.DEBUG)
+
+    # Prompts user for MIDI input port, unless a valid port number or name
+    # is given as the first argument on the command line.
+    # API backend defaults to ALSA on Linux.
+
+    print("\nChoose the output to External:\n")
+    print("---------------------------\n")
+
+    port = sys.argv[1] if len(sys.argv) > 1 else None
+
+    try:
+        #midiout, port_name_out = open_midioutput(port)
+        midiout_ext, port_name_out_ext = open_midioutput(1)
+
+    except (EOFError, KeyboardInterrupt):
+        sys.exit()
+
+#Midi Output Init
+
+#log = logging.getLogger('midiout')
+#logging.basicConfig(level=logging.DEBUG)
+
+# Prompts user for MIDI input port, unless a valid port number or name
+# is given as the first argument on the command line.
+# API backend defaults to ALSA on Linux.
+
+print("\nChoose the output to TotalMix:\n")
+print("---------------------------\n")
+
+port = sys.argv[1] if len(sys.argv) > 1 else None
+
+try:
+    #midiout, port_name_out = open_midioutput(port)
+    midiout, port_name_out = open_midioutput(0)
 
 except (EOFError, KeyboardInterrupt):
     sys.exit()
@@ -176,14 +222,15 @@ port = sys.argv[1] if len(sys.argv) > 1 else None
 
 try:
     #midiout, port_name_out = open_midioutput(port)
-    midiout, port_name_out = open_midioutput(4)
+    midiout, port_name_out = open_midioutput(0)
 
 except (EOFError, KeyboardInterrupt):
     sys.exit()
 
 print("\nMidi Input from External:", port_name_in_0)
+if ledmode: print("Midi Output to External: {}\n".format(port_name_out_ext))
 print("Midi Input from TotalMix:", port_name_in_1)
-print("Midi Output: {}\n".format(port_name_out))
+print("Midi Output to TotalMix: {}\n".format(port_name_out))
 
 #Get LCD Text
 
@@ -226,7 +273,7 @@ try:
             message, deltatime = msg0
 
             send = True
-
+            sendled = False
 
             timer += deltatime
             #print("[%s] @%0.6f %r" % (port_name_in, timer, message))
@@ -262,6 +309,8 @@ try:
                                     if message[2] > 0:
                                         send = True
                                         msgout = ([NOTE_OFF | output_ch, output_CC_or_Note, message[2]])
+                                        ledout = ([NOTE_ON | CH-1, CC, 127])
+                                        sendled = True
 
 
                                     if message[2] == 0:
@@ -272,6 +321,8 @@ try:
                                             send = False
                                         else:
                                             send = True
+                                            ledout = ([NOTE_OFF | CH-1, CC, 0])
+                                            sendled = True
 
                                         print(deltatime)
 
@@ -323,7 +374,7 @@ try:
 
 
                                 else:
-                                    print("---------------else")
+                                    #print("---------------else")
                                     output_CC_or_Note = int(output_CC_dict[key])
                                     output_type = "CC"
                                     output_value = message[2]
@@ -334,12 +385,16 @@ try:
                                     midiout.send_message(submix)
                                     submix_prev = submix
 
+
                                 print("Submix -> ", value)
 
                                 if send:
                                     print("Output -> {} Ch: {} {}: {} Value: {} \n".format(key, output_ch, output_type, output_CC_or_Note, output_value))
                                     midiout.send_message(msgout)
 
+                                    if sendled and ledmode:
+                                        midiout_ext.send_message(ledout)
+                                        print(ledout)
 
                         break
 
