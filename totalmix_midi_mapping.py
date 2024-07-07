@@ -4,10 +4,16 @@ import time
 import csv
 import os
 
+
 from rtmidi.midiutil import open_midiinput
 from rtmidi.midiutil import open_midioutput
 from rtmidi.midiconstants import NOTE_OFF, NOTE_ON
 from rtmidi.midiconstants import (CONTROL_CHANGE)
+
+def _prompt_for_choice(question):
+    """Prompt on the console whether a virtual MIDI port should be opened."""
+    return input("%s (y/N)\n" %question).strip().lower() in ['y', 'yes']
+
 
 def banking(row, ascii_char_old):
 
@@ -100,6 +106,10 @@ else:
 with open(os.path.join(bundle_dir, 'totalmix_midi_learn - matrix.csv')) as f:
     matrix = list(csv.DictReader(f, delimiter=','))
 
+with open("MidiConfig.txt", "r") as f:
+    print(list(f.read()))
+
+
 output_CH_dict = matrix[2]
 output_CC_dict = matrix[3]
 output_submix_dict = matrix[4]
@@ -107,25 +117,25 @@ output_solo_dict = matrix[5]
 output_mute_dict = matrix[6]
 output_LCD_dict = matrix[7]
 output_bank_dict = matrix[8]
-#print(output_mute_dict)
+data_list = [*matrix[-1].values()]
+
 
 submix_prev = 1
 lcd_header = [240, 0, 0, 102, 20, 18]
+savedports = [int(ele) for ele in data_list[9:12]]
 
+print("\n##########################################################################\nTotalMix Midi Mapping v0.1 (2024)\nOpen Source Midi Learn Functionality for TotalMix from RME\nTricking the MackieControl Implemantation to gain absolute Midi Mapping.\nBuilt with python 3.9, python-rtmidi, pyinstaller\nAuthor: andreaseinsiedler\nhttps://github.com/andreaseinsiedler/totalmix_midi_mapping\n##########################################################################")
 
+question = "Do you want to load the midi settings?"
+loading = _prompt_for_choice(question)
 
-
-
+if loading:
+    print("Here will be the loading... \n")
 
 #Midi Inputs Init
 
 #log = logging.getLogger('midiin_poll')
 #logging.basicConfig(level=logging.DEBUG)
-
-print("\n##########################################################################\nTotalMix Midi Mapping v0.1 (2024)\nOpen Source Midi Learn Functionality for TotalMix from RME\nTricking the MackieControl Implemantation to gain absolute Midi Mapping.\nBuilt with python 3.9, python-rtmidi, pyinstaller\nAuthor: andreaseinsiedler\nhttps://github.com/andreaseinsiedler/totalmix_midi_mapping\n##########################################################################")
-
-
-
 
 #Midi Input External
 
@@ -133,28 +143,30 @@ print("\n#######################################################################
 # is given as the first argument on the command line.
 # API backend defaults to ALSA on Linux.
 
-print("\nChoose the external Input:")
-print("---------------------------\n")
+if not loading:
+    print("\nChoose the external Input:")
+    print("---------------------------\n")
 
 port = sys.argv[1] if len(sys.argv) > 1 else None
 
 try:
-    #midiin_0, port_name_in_0 = open_midiinput(port)
-    midiin_0, port_name_in_0 = open_midiinput(1)
+    if not loading: midiin_0, port_name_in_0 = open_midiinput(port)
+    if loading: midiin_0, port_name_in_0 = open_midiinput(savedports[0])
 
 except (EOFError, KeyboardInterrupt):
     sys.exit()
 
 #Midi Input TotalMix Response
 
-print("\nChoose the Input from TotalMix:\n")
-print("---------------------------\n")
+if not loading:
+    print("\nChoose the Input from TotalMix:\n")
+    print("---------------------------\n")
 
 port = sys.argv[1] if len(sys.argv) > 1 else None
 
 try:
-    #midiin_1, port_name_in_1 = open_midiinput(port)
-    midiin_1, port_name_in_1 = open_midiinput(2)
+    if not loading: midiin_1, port_name_in_1 = open_midiinput(port)
+    if loading: midiin_1, port_name_in_1 = open_midiinput(savedports[1])
     midiin_1.ignore_types(sysex=False)
 
 except (EOFError, KeyboardInterrupt):
@@ -179,13 +191,13 @@ if ledmode:
     port = sys.argv[1] if len(sys.argv) > 1 else None
 
     try:
-        #midiout, port_name_out = open_midioutput(port)
-        midiout_ext, port_name_out_ext = open_midioutput(1)
+        if not loading: midiout, port_name_out = open_midioutput(port)
+        if loading: midiout_ext, port_name_out_ext = open_midioutput(savedports[2])
 
     except (EOFError, KeyboardInterrupt):
         sys.exit()
 
-#Midi Output Init
+#Midi Output to Totalmix
 
 #log = logging.getLogger('midiout')
 #logging.basicConfig(level=logging.DEBUG)
@@ -194,35 +206,15 @@ if ledmode:
 # is given as the first argument on the command line.
 # API backend defaults to ALSA on Linux.
 
-print("\nChoose the output to TotalMix:\n")
-print("---------------------------\n")
+if not loading:
+    print("\nChoose the output to TotalMix:\n")
+    print("---------------------------\n")
 
 port = sys.argv[1] if len(sys.argv) > 1 else None
 
 try:
-    #midiout, port_name_out = open_midioutput(port)
-    midiout, port_name_out = open_midioutput(0)
-
-except (EOFError, KeyboardInterrupt):
-    sys.exit()
-
-#Midi Output Init
-
-#log = logging.getLogger('midiout')
-#logging.basicConfig(level=logging.DEBUG)
-
-# Prompts user for MIDI input port, unless a valid port number or name
-# is given as the first argument on the command line.
-# API backend defaults to ALSA on Linux.
-
-print("\nChoose the output to TotalMix:\n")
-print("---------------------------\n")
-
-port = sys.argv[1] if len(sys.argv) > 1 else None
-
-try:
-    #midiout, port_name_out = open_midioutput(port)
-    midiout, port_name_out = open_midioutput(0)
+    if not loading: midiout, port_name_out = open_midioutput(port)
+    if loading: midiout, port_name_out = open_midioutput(0)
 
 except (EOFError, KeyboardInterrupt):
     sys.exit()
@@ -231,6 +223,13 @@ print("\nMidi Input from External:", port_name_in_0)
 if ledmode: print("Midi Output to External: {}\n".format(port_name_out_ext))
 print("Midi Input from TotalMix:", port_name_in_1)
 print("Midi Output to TotalMix: {}\n".format(port_name_out))
+
+if not loading:
+    question = "Do you want to save the midi settings?"
+    saving = _prompt_for_choice(question)
+else: saving = False
+
+if saving: print("Here will be saving...")
 
 #Get LCD Text
 
@@ -290,7 +289,7 @@ try:
                         print("Input -> {} Ch: {} CC: {} Value: {}".format(row["Index"], CH, CC, message[2]))
 
                         routing_dict = dict(row)
-                        for remove_key in ["Index", "Label", "M/S", "Ch", "CC", "Value"]: routing_dict.pop(remove_key, None)
+                        for remove_key in ["Index", "Label", "M/S", "Ch", "CC", "Value", "Data"]: routing_dict.pop(remove_key, None)
 
                         for key, value in routing_dict.items():
 
