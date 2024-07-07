@@ -11,7 +11,7 @@ from rtmidi.midiconstants import NOTE_OFF, NOTE_ON
 from rtmidi.midiconstants import (CONTROL_CHANGE)
 
 def _prompt_for_choice(question):
-    """Prompt on the console whether a virtual MIDI port should be opened."""
+    """Prompt on the console for y/N."""
     return input("%s (y/N)\n" %question).strip().lower() in ['y', 'yes']
 
 
