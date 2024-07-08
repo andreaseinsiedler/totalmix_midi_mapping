@@ -3,7 +3,6 @@ import sys
 import time
 import csv
 import os
-import cProfile
 
 from rtmidi.midiutil import open_midiinput, open_midioutput
 from rtmidi.midiconstants import NOTE_OFF, NOTE_ON, CONTROL_CHANGE
@@ -24,7 +23,7 @@ output_CC_dict = matrix[3]
 output_submix_dict = matrix[4]
 output_solo_dict = matrix[5]
 output_mute_dict = matrix[6]
-output_row_dict = matrix[7]
+output_LCD_dict = matrix[7]
 output_bank_dict = matrix[8]
 data_list = [*matrix[-1].values()]
 
@@ -33,82 +32,76 @@ def _prompt_for_choice(question):
     return input("%s (y/N)\n" %question).strip().lower() in ['y', 'yes']
 
 
-def change_row(row, ascii_char_old):
+def change_row(next_row, current_pos, bank):
 
-    send = True
-    command_up = 0x29
-    command_dn = 0x28
-    ascii_char = ascii_char_old
-    print("row:", row, "ascii_char_old:",ascii_char_old, "send:", send)
+
+    change_row = True
+    change_bank = True
+    up = 0x29
+    dn = 0x28
+    bk_up = 0x2F
+    bk_dn = 0x2E
+
+    new_pos = current_pos
+    print("next_row:", next_row, "current_pos:",current_pos, "change_row:", change_row)
 
     while True:
 
-        if ascii_char_old[:2] == row[:2]:
-            break
+        if new_pos[:2] == next_row[:2]: change_row = False
+        if new_pos[2:] == next_row[2:]: change_bank = False
+        if current_pos == next_row: break
 
-        if send:
+        if change_row:
 
-            if row[:2] == "In" and ascii_char_old[:2] == "Pb":
-                msgout = ([NOTE_OFF | 0, command_up, 0])
-                print("command_up")
+            if next_row[:2] == "In" and current_pos[:2] == "Pb": command = up
+            elif next_row[:2] == "Pb" and current_pos[:2] == "Ou": command = up
+            elif next_row[:2] == "Ou" and current_pos[:2] == "In": command = up
+            elif next_row[:2] == "In" and current_pos[:2] == "Ou": command = dn
+            elif next_row[:2] == "Pb" and current_pos[:2] == "In": command = dn
+            elif next_row[:2] == "Ou" and current_pos[:2] == "Pb": command = dn
+            else: command = up
 
+            midiout.send_message([NOTE_OFF | 0, command, 0])
 
-            elif row[:2] == "In" and ascii_char_old[:2] == "Ou":
-                msgout = ([NOTE_OFF | 0, command_dn, 0])
-                print("command_dn")
+            change_row = False
 
+        if change_bank:
 
-            elif row[:2] == "Pb" and ascii_char_old[:2] == "In":
-                msgout = ([NOTE_OFF | 0, command_dn, 0])
-                print("command_dn")
+            if next_row[2:] < current_pos[2:]: command = bk_dn
+            elif next_row[2:] > current_pos[2:]: command = bk_up
+            else: command = bk_dn
 
+            midiout.send_message([NOTE_OFF | 0, command, 0])
 
-            elif row[:2] == "Pb" and ascii_char_old[:2] == "Ou":
-                msgout = ([NOTE_OFF | 0, command_up, 0])
-                print("command_up")
-
-
-            elif row[:2] == "Ou" and ascii_char_old[:2] == "In":
-                msgout = ([NOTE_OFF | 0, command_up, 0])
-                print("command_up")
-
-
-            elif row[:2] == "Ou" and ascii_char_old[:2] == "Pb":
-                msgout = ([NOTE_OFF | 0, command_dn, 0])
-                print("command_dn")
+            change_bank = False
 
 
-            else:
-                msgout = ([NOTE_OFF | 0, command_up, 0])
-                print("else__command_up")
+        msg_totalmix = midiin_totalmix.get_message()
 
+        if msg_totalmix:
 
-            midiout.send_message(msgout)
-
-            send = False
-
-        msg1 = midiin_1.get_message()
-
-        if msg1:
-
-            message, deltatime = msg1
+            message, deltatime = msg_totalmix
 
             if lcd_header == message[:6]:
 
-                ascii_char = ""
-                for num in message[7:-1]: ascii_char += chr(num)
+                new_pos = ""
+                for num in message[7:-1]: new_pos += chr(num)
 
-                print("banking - ascii_char", ascii_char, "\n")
+                print("new_pos", new_pos, "\n")
 
-                if ascii_char[:2] == row[:2]:
-                    break
+                if new_pos == next_row: break
 
                 else:
-                    send = True
+                    change_row = True
+                    change_bank = True
 
         time.sleep(0.025)
 
-    return ascii_char
+
+
+
+
+    return new_pos
 
 
 
@@ -116,297 +109,260 @@ def change_row(row, ascii_char_old):
 
 
 
-def main():
 
 
-    print("\n##########################################################################\nTotalMix Midi Mapping v0.1 (2024)\nOpen Source Midi Mapping for TotalMix from RME\nHacking the MackieControl-Implementation for absolute Midi Mapping.\nBuilt with python 3.9, python-rtmidi, pyinstaller\nAuthor: andreaseinsiedler\nhttps://github.com/andreaseinsiedler/totalmix_midi_mapping\n##########################################################################")
 
-    question = "Do you want to load the Midi settings from MidiConfig.txt?"
-    loading = _prompt_for_choice(question)
+print("\n##########################################################################\nTotalMix Midi Mapping v0.1 (2024)\nOpen Source Midi Mapping for TotalMix from RME\nHacking the MackieControl-Implementation for absolute Midi Mapping.\nBuilt with python 3.9, python-rtmidi, pyinstaller\nAuthor: andreaseinsiedler\nhttps://github.com/andreaseinsiedler/totalmix_midi_mapping\n##########################################################################")
 
-    if loading:
+question = "Do you want to load the Midi settings from MidiConfig.txt?"
+loading = _prompt_for_choice(question)
 
-        if os.path.exists(midiconfig_path):
+if loading:
 
-            with open(midiconfig_path, "r") as f:
+    if os.path.exists(midiconfig_path):
 
-                ports_saved = [int(ele) for ele in list(f.read().splitlines())]
-                print(ports_saved)
+        with open(midiconfig_path, "r") as f:
 
-        else:
-            print("Error: File MidiConfig.txt not found")
-            loading = False
+            ports_saved = [int(ele) for ele in list(f.read().splitlines())]
+            print("Loaded from file:")
+            print("Midi In External Port:", ports_saved[0])
+            print("Midi In TotalMix Port:", ports_saved[1])
+            print("Midi Out TotalMix Port:", ports_saved[2])
 
-    #Midi Inputs Init
+    else:
+        print("Error: File MidiConfig.txt not found")
+        loading = False
 
-    #log = logging.getLogger('midiin_poll')
-    #logging.basicConfig(level=logging.DEBUG)
+"""Midi Inputs Init"""
 
-    #Midi Input External
+#log = logging.getLogger('midiin_poll')
+#logging.basicConfig(level=logging.DEBUG)
 
-    # Prompts user for MIDI input port, unless a valid port number or name
-    # is given as the first argument on the command line.
-    # API backend defaults to ALSA on Linux.
+#Midi Input from External
 
-    if not loading:
-        print("\nChoose the external Input:")
-        print("---------------------------\n")
+# Prompts user for MIDI input port, unless a valid port number or name
+# is given as the first argument on the command line.
+# API backend defaults to ALSA on Linux.
 
-    port = sys.argv[1] if len(sys.argv) > 1 else None
+if not loading:
+    print("\nChoose the external Input:")
+    print("---------------------------\n")
 
-    try:
-        if not loading: midiin_0, port_name_in_0 = open_midiinput(port)
-        if loading: midiin_0, port_name_in_0 = open_midiinput(ports_saved[0])
+port = None
 
-    except (EOFError, KeyboardInterrupt):
-        sys.exit()
+try:
+    if not loading: midiin_external, port_name_in_external = open_midiinput(port)
+    if loading: midiin_external, port_name_in_external = open_midiinput(ports_saved[0])
 
-    #Midi Input TotalMix Response
+except (EOFError, KeyboardInterrupt):
+    sys.exit()
 
-    if not loading:
-        print("\nChoose the Input from TotalMix:\n")
-        print("---------------------------\n")
+#Midi Input from TotalMix
 
-    port = sys.argv[1] if len(sys.argv) > 1 else None
+if not loading:
+    print("\nChoose the Input from TotalMix:\n")
+    print("---------------------------\n")
 
-    try:
-        if not loading: midiin_1, port_name_in_1 = open_midiinput(port)
-        if loading: midiin_1, port_name_in_1 = open_midiinput(ports_saved[1])
-        midiin_1.ignore_types(sysex=False)
+port =  None
 
-    except (EOFError, KeyboardInterrupt):
-        sys.exit()
+try:
+    if not loading: midiin_totalmix, port_name_in_totalmix = open_midiinput(port)
+    if loading: midiin_totalmix, port_name_in_totalmix = open_midiinput(ports_saved[1])
+    midiin_totalmix.ignore_types(sysex=False)
 
-    #Midi Output to Totalmix
+except (EOFError, KeyboardInterrupt):
+    sys.exit()
 
-    #log = logging.getLogger('midiout')
-    #logging.basicConfig(level=logging.DEBUG)
+#Midi Output to Totalmix
 
-    # Prompts user for MIDI input port, unless a valid port number or name
-    # is given as the first argument on the command line.
-    # API backend defaults to ALSA on Linux.
+#log = logging.getLogger('midiout')
+#logging.basicConfig(level=logging.DEBUG)
 
-    if not loading:
-        print("\nChoose the output to TotalMix:\n")
-        print("---------------------------\n")
+# Prompts user for MIDI input port, unless a valid port number or name
+# is given as the first argument on the command line.
+# API backend defaults to ALSA on Linux.
 
-    port = sys.argv[1] if len(sys.argv) > 1 else None
+if not loading:
+    print("\nChoose the output to TotalMix:\n")
+    print("---------------------------\n")
 
-    try:
-        if not loading: midiout, port_name_out = open_midioutput(port)
-        if loading: midiout, port_name_out = open_midioutput(ports_saved[2])
+port = sys.argv[1] if len(sys.argv) > 1 else None
 
-    except (EOFError, KeyboardInterrupt):
-        sys.exit()
+try:
+    if not loading: midiout, port_name_out = open_midioutput(port)
+    if loading: midiout, port_name_out = open_midioutput(ports_saved[2])
 
-    print("\nMidi Input from External:", port_name_in_0)
-    print("Midi Input from TotalMix:", port_name_in_1)
-    print("Midi Output to TotalMix: {}\n".format(port_name_out))
+except (EOFError, KeyboardInterrupt):
+    sys.exit()
 
-    if not loading:
-        question = "Do you want to save the midi settings?"
-        saving = _prompt_for_choice(question)
-    else: saving = False
+print("\nMidi Input from External:", port_name_in_external)
+print("Midi Input from TotalMix:", port_name_in_totalmix)
+print("Midi Output to TotalMix: {}\n".format(port_name_out))
 
-    if saving:
-        print("Here will be saving...")
+if not loading:
+    question = "Do you want to save the midi settings?"
+    saving = _prompt_for_choice(question)
+else: saving = False
 
-        with open(midiconfig_path, "w") as text_file:
-            text_file.write("%s\n%s\n%s\n" % (portin0, portin1, portout))
+if saving:
+    print("Here will be saving...")
 
-    #Get LCD Text
+    with open(midiconfig_path, "w") as text_file:
+        text_file.write("%s\n%s\n%s\n" % (portin0, portin1, portout))
 
-    midiout.send_message([0x80, 0x28, 0])
+
+#Get LCD Text
+
+midiout.send_message([0x80, 0x28, 0])
+
+while True:
+
+    msg_totalmix = midiin_totalmix.get_message()
+
+    if msg_totalmix:
+
+        message, deltatime = msg_totalmix
+
+        if lcd_header == message[:6]:
+
+            LCD_Text = ""
+            for num in message[7:-1]: LCD_Text += chr(num)
+
+
+            print("start LCD_Text", LCD_Text, "\n")
+
+            break
+
+    time.sleep(0.0025)
+
+#Main
+
+try:
+
+    timer = time.time()
 
     while True:
 
-        msg1 = midiin_1.get_message()
+        msg_external = midiin_external.get_message()
+        msg_totalmix = midiin_totalmix.get_message()
 
-        if msg1:
+        if msg_external:
 
-            message, deltatime = msg1
+            message, deltatime = msg_external
 
-            if lcd_header == message[:6]:
+            send = True
+            change_submix = False
 
-                ascii_char = ""
-                for num in message[7:-1]: ascii_char += chr(num)
+            timer += deltatime
+            #print("[%s] @%0.6f %r" % (port_name_in, timer, message))
+
+            for row in matrix:
+
+                if row["CC"]:
+
+                    CH = int(row["Ch"])
+                    CC = int(row["CC"])
+
+                    if message[0] == CH+175 and message[1] == CC:
+
+                        print("Input -> {} {} Ch: {} CC: {} Value: {}".format(row["Index"], row["Label"], CH, CC, message[2]))
+
+                        routing_dict = dict(row)
+                        for remove_key in ["Index", "Label", "M/S", "Ch", "CC", "Value"]: routing_dict.pop(remove_key, None)
+
+                        for key, value in routing_dict.items():
+
+                            if value:
+
+                                output_ch = int(output_CH_dict[key])
+                                if output_submix_dict[value]: submix = [int(e, 16) for e in output_submix_dict[value].split(",")]
+
+                                if value == "TlkB":
+
+                                    output_type = NOTE_OFF
+                                    output_CC_or_Note = int(output_CC_dict[key], 16)
+                                    print(message)
+                                    output_type_string = "Note_Off"
+                                    output_value = message[2]
+
+                                    if message[2] > 0: send = True
+
+                                    if message[2] == 0:
+                                        if deltatime < 1: send = False
+                                        else: send = True
+
+                                        print("Button Held for :", deltatime)
 
 
-                print("start ascii_char", ascii_char, "\n")
+                                elif value == "Map":
 
-                break
+                                    output_CC_or_Note = int(output_CC_dict[key], 16)
+                                    output_type_string = "Note_Off"
+                                    output_value = message[2]
+                                    if message[2] > 0:
+                                        send = False
+                                        output_type = NOTE_ON
+
+                                    if message[2] == 0:
+                                        output_type = NOTE_OFF
+                                        send = True
+
+                                elif value == "S" or value == "M":
+
+                                    output_ch = int(output_CH_dict[value])
+                                    totalmix_row = output_LCD_dict[key]
+                                    totalmix_bank = output_bank_dict[key]
+
+                                    print("before change row:", LCD_Text)
+                                    LCD_Text = change_row(totalmix_row, LCD_Text ,totalmix_bank)
+                                    print("after change row:", LCD_Text)
+
+                                    if value == "S": output_CC_or_Note = int(output_solo_dict[key], 16)
+                                    elif value == "M": output_CC_or_Note = int(output_mute_dict[key], 16)
+                                    output_type = NOTE_OFF
+                                    output_type_string = "Note_Off"
+                                    output_value = 0
+                                    bank = int(output_bank_dict[key])
+
+                                else:
+
+                                    output_type = CONTROL_CHANGE
+                                    output_type_string = "CC"
+                                    output_CC_or_Note = int(output_CC_dict[key])
+                                    output_value = message[2]
+                                    change_submix = True
+
+                                if submix != submix_prev and change_submix:
+                                    midiout.send_message(submix)
+                                    submix_prev = submix
+
+                                print("Submix -> ", value)
+
+                                if send:
+                                    print("Output -> {} Ch: {} {}: {} Value: {} \n".format(key, output_ch, output_type_string, output_CC_or_Note, output_value))
+                                    msgout = ([output_type | output_ch, output_CC_or_Note, output_value])
+                                    midiout.send_message(msgout)
+
+                        break
+
+        if msg_totalmix:
+
+            message, deltatime = msg_totalmix
 
         time.sleep(0.0025)
 
-    #Main
-
-    try:
-
-        timer = time.time()
-        #print(timer)
-
-        while True:
-
-            msg0 = midiin_0.get_message()
-            msg1 = midiin_1.get_message()
-
-            if msg0:
-
-                message, deltatime = msg0
-
-                send = True
-                sendled = False
-
-                timer += deltatime
-                #print("[%s] @%0.6f %r" % (port_name_in, timer, message))
-
-                for row in matrix:
-
-                    if (row["CC"]):
-
-                        CH = int(row["Ch"])
-                        CC = int(row["CC"])
-
-                        if message[0] == CH+175 and message[1] == CC:
-
-                            print("Input -> {} Ch: {} CC: {} Value: {}".format(row["Index"], CH, CC, message[2]))
-
-                            routing_dict = dict(row)
-                            for remove_key in ["Index", "Label", "M/S", "Ch", "CC", "Value", "Data"]: routing_dict.pop(remove_key, None)
-
-                            for key, value in routing_dict.items():
-
-                                if value:
-
-                                    output_ch = int(output_CH_dict[key])
-                                    submix = [int(ele, 16) for ele in output_submix_dict[value].split(",")]
-
-                                    if value == "TlkB":
-                                        #print("-------------if TlkB")
-                                        output_CC_or_Note = int(output_CC_dict[key], 16)
-                                        print(message)
-                                        output_type = "Note_Off"
-                                        output_value = 0
-
-                                        if message[2] > 0:
-                                            send = True
-                                            msgout = ([NOTE_OFF | output_ch, output_CC_or_Note, message[2]])
-                                            ledout = ([NOTE_ON | CH-1, CC, 127])
-                                            sendled = True
-
-
-                                        if message[2] == 0:
-
-                                            msgout = ([NOTE_OFF | output_ch, output_CC_or_Note, message[2]])
-
-                                            if deltatime < 1:
-                                                send = False
-                                            else:
-                                                send = True
-                                                ledout = ([NOTE_OFF | CH-1, CC, 0])
-                                                sendled = True
-
-                                            print(deltatime)
-
-
-                                    elif value == "Map":
-                                        #print("---------------elif Map")
-                                        output_CC_or_Note = int(output_CC_dict[key], 16)
-                                        output_type = "Note_Off"
-                                        output_value = message[2]
-                                        if message[2] > 0:
-                                            send = False
-                                            msgout = ([NOTE_ON | output_ch, output_CC_or_Note, message[2]])
-                                        if message[2] == 0:
-                                            msgout = ([NOTE_OFF | output_ch, output_CC_or_Note, message[2]])
-                                            send = True
-
-                                        #print("Map to {}".format(key))
-
-                                    elif value == "S" or value == "M":
-                                        #print("---------------elif S or M")
-                                        totalmix_row = output_row_dict[key]
-                                        output_ch = 0
-
-                                        print("before banking:", ascii_char)
-                                        ascii_char = change_row(totalmix_row,ascii_char)
-                                        print("after banking:", ascii_char)
-
-                                        if value == "S": output_CC_or_Note = int(output_solo_dict[key], 16)
-
-                                        elif value == "M": output_CC_or_Note = int(output_mute_dict[key], 16)
-
-                                        output_type = "Note_Off"
-                                        output_value = 0
-                                        bank = int(output_bank_dict[key])
-
-
-
-
-                                        msgout = ([NOTE_OFF | output_ch, output_CC_or_Note, output_value])
-
-
-
-
-
-
-
-
-
-
-
-                                    else:
-                                        #print("---------------else")
-                                        output_CC_or_Note = int(output_CC_dict[key])
-                                        output_type = "CC"
-                                        output_value = message[2]
-
-                                        msgout = ([CONTROL_CHANGE | output_ch, output_CC_or_Note, output_value])
-
-                                    if submix != submix_prev:
-                                        midiout.send_message(submix)
-                                        submix_prev = submix
-
-
-                                    print("Submix -> ", value)
-
-                                    if send:
-                                        print("Output -> {} Ch: {} {}: {} Value: {} \n".format(key, output_ch, output_type, output_CC_or_Note, output_value))
-                                        midiout.send_message(msgout)
-
-
-
-                            break
-
-            if msg1:
-
-                message, deltatime = msg1
-
-                #if lcd_header == message[:6]:
-
-                    #ascii_char = ""
-                    #for num in message[7:-1]:
-                     #   ascii_char += chr(num)
-                    #print("LCD Text -> ", ascii_char, "\n")
-
-            time.sleep(0.0025)
-
-
-    except KeyboardInterrupt:
-            print('')
-
-    finally:
-
-        midiin_0.close_port()
-        print("Midi In 1 closed")
-        midiin_1.close_port()
-        print("Midi In 2 closed")
-        del midiin_0
-        del midiin_1
-        print("Exit.")
-
-if __name__ == '__main__':
-    cProfile.run('main()')
+except KeyboardInterrupt:
+        print('')
+
+finally:
+
+    midiin_external.close_port()
+    print("Midi In 1 closed")
+    midiin_totalmix.close_port()
+    print("Midi In 2 closed")
+    del midiin_external
+    del midiin_totalmix
+    print("Exit.")
 
 
 

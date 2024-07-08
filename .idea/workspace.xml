@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="544ca33c-d5fd-4e42-81e7-6baa9b0f3573" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/totalmix_midi_learn - matrix.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/totalmix_midi_mapping.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/totalmix_midi_mapping.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/totalmix_midi_mapping - matrix.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MidiConfig.txt" beforeDir="false" afterPath="$PROJECT_DIR$/MidiConfig.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/totalmix_midi_mapping - matrix.csv" beforeDir="false" afterPath="$PROJECT_DIR$/totalmix_midi_mapping - matrix.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/totalmix_midi_mapping.py" beforeDir="false" afterPath="$PROJECT_DIR$/totalmix_midi_mapping.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,7 +39,8 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/hello/PycharmProjects/totalmix_midi_mapping"
+    "last_opened_file_path": "C:/Users/hello/PycharmProjects/totalmix_midi_mapping",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -56,7 +58,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="Python 3.9 (pythonProject)" />
+      <option name="SDK_NAME" value="Python 3.9 (totalmix_midi_mapping)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
