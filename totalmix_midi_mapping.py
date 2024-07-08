@@ -5,22 +5,16 @@ import csv
 import os
 import cProfile
 
-from rtmidi.midiutil import open_midiinput
-from rtmidi.midiutil import open_midioutput
-from rtmidi.midiconstants import NOTE_OFF, NOTE_ON
-from rtmidi.midiconstants import (CONTROL_CHANGE)
+from rtmidi.midiutil import open_midiinput, open_midioutput
+from rtmidi.midiconstants import NOTE_OFF, NOTE_ON, CONTROL_CHANGE
 
-if getattr(sys, 'frozen', False):
-    # we are running in a bundle
-    bundle_dir = os.path.dirname(sys.executable)
-else:
-    # we are running in a normal Python environment
-    bundle_dir = os.path.dirname(os.path.abspath(__file__))
+if getattr(sys, 'frozen', False): bundle_dir = os.path.dirname(sys.executable)  # we are running in a bundle
+else: bundle_dir = os.path.dirname(os.path.abspath(__file__)) # we are running in a normal Python environment
 
 submix_prev = 1
 lcd_header = [240, 0, 0, 102, 20, 18]
 midiconfig_path = os.path.join(bundle_dir, "MidiConfig.txt")
-matrix_path = os.path.join(bundle_dir, 'totalmix_midi_learn - matrix.csv')
+matrix_path = os.path.join(bundle_dir, 'totalmix_midi_mapping - matrix.csv')
 
 with open(matrix_path, 'r') as f:
     matrix = list(csv.DictReader(f, delimiter=','))
@@ -30,7 +24,7 @@ output_CC_dict = matrix[3]
 output_submix_dict = matrix[4]
 output_solo_dict = matrix[5]
 output_mute_dict = matrix[6]
-output_LCD_dict = matrix[7]
+output_row_dict = matrix[7]
 output_bank_dict = matrix[8]
 data_list = [*matrix[-1].values()]
 
@@ -39,9 +33,8 @@ def _prompt_for_choice(question):
     return input("%s (y/N)\n" %question).strip().lower() in ['y', 'yes']
 
 
-def banking(row, ascii_char_old):
+def change_row(row, ascii_char_old):
 
-    #row = "Ou"
     send = True
     command_up = 0x29
     command_dn = 0x28
@@ -126,9 +119,9 @@ def banking(row, ascii_char_old):
 def main():
 
 
-    print("\n##########################################################################\nTotalMix Midi Mapping v0.1 (2024)\nOpen Source Midi Learn Functionality for TotalMix from RME\nTricking the MackieControl Implemantation to gain absolute Midi Mapping.\nBuilt with python 3.9, python-rtmidi, pyinstaller\nAuthor: andreaseinsiedler\nhttps://github.com/andreaseinsiedler/totalmix_midi_mapping\n##########################################################################")
+    print("\n##########################################################################\nTotalMix Midi Mapping v0.1 (2024)\nOpen Source Midi Mapping for TotalMix from RME\nHacking the MackieControl-Implementation for absolute Midi Mapping.\nBuilt with python 3.9, python-rtmidi, pyinstaller\nAuthor: andreaseinsiedler\nhttps://github.com/andreaseinsiedler/totalmix_midi_mapping\n##########################################################################")
 
-    question = "Do you want to load the midi settings?"
+    question = "Do you want to load the Midi settings from MidiConfig.txt?"
     loading = _prompt_for_choice(question)
 
     if loading:
@@ -136,9 +129,9 @@ def main():
         if os.path.exists(midiconfig_path):
 
             with open(midiconfig_path, "r") as f:
-                midiconfig = list(f.read().splitlines())
-                savedports = [int(ele) for ele in midiconfig]
-                print(savedports)
+
+                ports_saved = [int(ele) for ele in list(f.read().splitlines())]
+                print(ports_saved)
 
         else:
             print("Error: File MidiConfig.txt not found")
@@ -162,8 +155,8 @@ def main():
     port = sys.argv[1] if len(sys.argv) > 1 else None
 
     try:
-        if not loading: midiin_0, port_name_in_0, portin0 = open_midiinput(port)
-        if loading: midiin_0, port_name_in_0, portin0 = open_midiinput(savedports[0])
+        if not loading: midiin_0, port_name_in_0 = open_midiinput(port)
+        if loading: midiin_0, port_name_in_0 = open_midiinput(ports_saved[0])
 
     except (EOFError, KeyboardInterrupt):
         sys.exit()
@@ -177,8 +170,8 @@ def main():
     port = sys.argv[1] if len(sys.argv) > 1 else None
 
     try:
-        if not loading: midiin_1, port_name_in_1, portin1 = open_midiinput(port)
-        if loading: midiin_1, port_name_in_1, portin1 = open_midiinput(savedports[1])
+        if not loading: midiin_1, port_name_in_1 = open_midiinput(port)
+        if loading: midiin_1, port_name_in_1 = open_midiinput(ports_saved[1])
         midiin_1.ignore_types(sysex=False)
 
     except (EOFError, KeyboardInterrupt):
@@ -200,8 +193,8 @@ def main():
     port = sys.argv[1] if len(sys.argv) > 1 else None
 
     try:
-        if not loading: midiout, port_name_out, portout = open_midioutput(port)
-        if loading: midiout, port_name_out, portout = open_midioutput(savedports[2])
+        if not loading: midiout, port_name_out = open_midioutput(port)
+        if loading: midiout, port_name_out = open_midioutput(ports_saved[2])
 
     except (EOFError, KeyboardInterrupt):
         sys.exit()
@@ -332,11 +325,11 @@ def main():
 
                                     elif value == "S" or value == "M":
                                         #print("---------------elif S or M")
-                                        totalmix_row = output_LCD_dict[key]
+                                        totalmix_row = output_row_dict[key]
                                         output_ch = 0
 
                                         print("before banking:", ascii_char)
-                                        ascii_char = banking(totalmix_row,ascii_char)
+                                        ascii_char = change_row(totalmix_row,ascii_char)
                                         print("after banking:", ascii_char)
 
                                         if value == "S": output_CC_or_Note = int(output_solo_dict[key], 16)
