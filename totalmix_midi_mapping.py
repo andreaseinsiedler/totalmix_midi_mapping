@@ -27,54 +27,16 @@ output_LCD_dict = matrix[7]
 output_bank_dict = matrix[8]
 data_list = [*matrix[-1].values()]
 
-def _prompt_for_choice(question):
-    """Prompt on the console for y/N."""
-    return input("%s (y/N)\n" %question).strip().lower() in ['y', 'yes']
+def reset_banking():
 
-
-def change_row(next_row, current_pos, bank):
-
-
-    change_row = True
-    change_bank = True
-    up = 0x29
-    dn = 0x28
-    bk_up = 0x2F
-    bk_dn = 0x2E
-
-    new_pos = current_pos
-    print("next_row:", next_row, "current_pos:",current_pos, "change_row:", change_row)
+    bank_dn = False
+    midiout.send_message([0x80, 0x28, 0])
 
     while True:
 
-        if new_pos[:2] == next_row[:2]: change_row = False
-        if new_pos[2:] == next_row[2:]: change_bank = False
-        if current_pos == next_row: break
-
-        if change_row:
-
-            if next_row[:2] == "In" and current_pos[:2] == "Pb": command = up
-            elif next_row[:2] == "Pb" and current_pos[:2] == "Ou": command = up
-            elif next_row[:2] == "Ou" and current_pos[:2] == "In": command = up
-            elif next_row[:2] == "In" and current_pos[:2] == "Ou": command = dn
-            elif next_row[:2] == "Pb" and current_pos[:2] == "In": command = dn
-            elif next_row[:2] == "Ou" and current_pos[:2] == "Pb": command = dn
-            else: command = up
-
-            midiout.send_message([NOTE_OFF | 0, command, 0])
-
-            change_row = False
-
-        if change_bank:
-
-            if next_row[2:] < current_pos[2:]: command = bk_dn
-            elif next_row[2:] > current_pos[2:]: command = bk_up
-            else: command = bk_dn
-
-            midiout.send_message([NOTE_OFF | 0, command, 0])
-
-            change_bank = False
-
+        if bank_dn:
+            midiout.send_message([0x80, 0x2E, 0])
+            bank_dn = False
 
         msg_totalmix = midiin_totalmix.get_message()
 
@@ -84,24 +46,110 @@ def change_row(next_row, current_pos, bank):
 
             if lcd_header == message[:6]:
 
-                new_pos = ""
-                for num in message[7:-1]: new_pos += chr(num)
+                LCD_Text = ""
+                for num in message[7:-1]: LCD_Text += chr(num)
 
-                print("new_pos", new_pos, "\n")
+                print("start LCD_Text", LCD_Text, "\n")
 
-                if new_pos == next_row: break
+                if LCD_Text[3:] == "01":  break
 
-                else:
-                    change_row = True
-                    change_bank = True
+                else: bank_dn = True
+
+        time.sleep(0.0025)
+
+    return LCD_Text, 1
+
+
+
+def _prompt_for_choice(question):
+    """Prompt on the console for y/N."""
+    return input("%s (y/N)\n" %question).strip().lower() in ['y', 'yes']
+
+
+def change_row_and_bank(current_pos, next_pos, current_bank, next_bank):
+
+    if current_pos[:2] == next_pos[:2] and current_bank == next_bank: return current_pos, current_bank
+
+    row_up = 0x29
+    row_dn = 0x28
+    bk_up = 0x2F
+    bk_dn = 0x2E
+    change_row = True
+    change_bank = True
+    return_flag = False
+
+    print("current_pos:",current_pos, "next_pos:", next_pos, "current_bank:", current_bank, "next_bank:", next_bank)
+
+
+
+    while True:
+
+        if current_pos[:2] == next_pos[:2] and current_bank == next_bank and not return_flag:
+
+            return_flag = True
+            print("early return")
+
+        if current_pos[:2] == next_pos[:2]: change_row = False
+        if current_bank == next_bank: change_bank = False
+
+        if change_row:
+            print("row")
+            if next_pos[:2] == "In" and current_pos[:2] == "Pb": command = row_up
+            elif next_pos[:2] == "Pb" and current_pos[:2] == "Ou": command = row_up
+            elif next_pos[:2] == "Ou" and current_pos[:2] == "In": command = row_up
+            elif next_pos[:2] == "In" and current_pos[:2] == "Ou": command = row_dn
+            elif next_pos[:2] == "Pb" and current_pos[:2] == "In": command = row_dn
+            elif next_pos[:2] == "Ou" and current_pos[:2] == "Pb": command = row_dn
+
+            midiout.send_message([NOTE_OFF | 0, command, 0])
+
+            change_row = False
+            change_bank = False
+
+
+        elif change_bank:
+            print("elif")
+            if current_bank > next_bank:
+                command = bk_dn
+                current_bank -= 1
+
+            elif current_bank < next_bank:
+                command = bk_up
+                current_bank += 1
+            print(current_bank)
+            midiout.send_message([NOTE_OFF | 0, command, 0])
+
+            change_bank = False
+            change_row = False
+
+
+        msg_totalmix = midiin_totalmix.get_message()
+
+        if msg_totalmix:
+
+            message, deltatime = msg_totalmix
+            print(message)
+            if lcd_header == message[:6]:
+
+
+                current_pos = ""
+                for num in message[7:-1]: current_pos += chr(num)
+
+                print("current_pos", current_pos)
+
+                change_bank = True
+                change_row = True
+                print(return_flag)
+                if return_flag: break
+
 
         time.sleep(0.025)
 
 
 
 
-
-    return new_pos
+    print(current_pos, "bank:", current_bank)
+    return current_pos, current_bank
 
 
 
@@ -211,29 +259,7 @@ if saving:
         text_file.write("%s\n%s\n%s\n" % (portin0, portin1, portout))
 
 
-#Get LCD Text
-
-midiout.send_message([0x80, 0x28, 0])
-
-while True:
-
-    msg_totalmix = midiin_totalmix.get_message()
-
-    if msg_totalmix:
-
-        message, deltatime = msg_totalmix
-
-        if lcd_header == message[:6]:
-
-            LCD_Text = ""
-            for num in message[7:-1]: LCD_Text += chr(num)
-
-
-            print("start LCD_Text", LCD_Text, "\n")
-
-            break
-
-    time.sleep(0.0025)
+LCD_Text, current_bank = reset_banking()
 
 #Main
 
@@ -267,6 +293,11 @@ try:
 
                         print("Input -> {} {} Ch: {} CC: {} Value: {}".format(row["Index"], row["Label"], CH, CC, message[2]))
 
+                        if row["Value"] and message[2] != 0:
+                            passed_value = int(row["Value"])
+                        else: passed_value = message[2]
+
+
                         routing_dict = dict(row)
                         for remove_key in ["Index", "Label", "M/S", "Ch", "CC", "Value"]: routing_dict.pop(remove_key, None)
 
@@ -283,7 +314,7 @@ try:
                                     output_CC_or_Note = int(output_CC_dict[key], 16)
                                     print(message)
                                     output_type_string = "Note_Off"
-                                    output_value = message[2]
+                                    output_value = passed_value
 
                                     if message[2] > 0: send = True
 
@@ -307,15 +338,16 @@ try:
                                         output_type = NOTE_OFF
                                         send = True
 
+
+
                                 elif value == "S" or value == "M":
 
                                     output_ch = int(output_CH_dict[value])
                                     totalmix_row = output_LCD_dict[key]
-                                    totalmix_bank = output_bank_dict[key]
+                                    totalmix_bank = int(output_bank_dict[key])
 
-                                    print("before change row:", LCD_Text)
-                                    LCD_Text = change_row(totalmix_row, LCD_Text ,totalmix_bank)
-                                    print("after change row:", LCD_Text)
+                                    LCD_Text, current_bank = change_row_and_bank(LCD_Text, totalmix_row, current_bank, totalmix_bank)
+                                    print("after banking: Pos:", LCD_Text, "Bank:", current_bank)
 
                                     if value == "S": output_CC_or_Note = int(output_solo_dict[key], 16)
                                     elif value == "M": output_CC_or_Note = int(output_mute_dict[key], 16)
@@ -329,19 +361,25 @@ try:
                                     output_type = CONTROL_CHANGE
                                     output_type_string = "CC"
                                     output_CC_or_Note = int(output_CC_dict[key])
-                                    output_value = message[2]
+                                    output_value = passed_value
+
                                     change_submix = True
 
-                                if submix != submix_prev and change_submix:
-                                    midiout.send_message(submix)
-                                    submix_prev = submix
+
+                                if change_submix:
+                                    if submix != submix_prev:
+                                        midiout.send_message(submix)
+                                        time.sleep(0.05)
+                                        submix_prev = submix
 
                                 print("Submix -> ", value)
 
                                 if send:
                                     print("Output -> {} Ch: {} {}: {} Value: {} \n".format(key, output_ch, output_type_string, output_CC_or_Note, output_value))
                                     msgout = ([output_type | output_ch, output_CC_or_Note, output_value])
+
                                     midiout.send_message(msgout)
+                                    print(msgout)
 
                         break
 
