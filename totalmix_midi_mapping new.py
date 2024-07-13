@@ -33,6 +33,94 @@ output_mute_dict = commands[4]
 output_bank_dict = commands[5]
 
 
+def get_lcd_text():
+
+    no_of_msgs = 0
+    LCD_Text_List = []
+    upper_line_start = False
+    exit = 0
+
+    while True:
+
+        msg_totalmix = midiin_totalmix.get_message()
+
+        if msg_totalmix:
+
+            message, deltatime = msg_totalmix
+
+            if lcd_header == message[:6]:
+
+                if message[6] == 0: upper_line_start = True
+
+                if upper_line_start:
+
+                    LCD_Text = ""
+                    for num in message[7:-1]: LCD_Text += chr(num)
+                    LCD_Text_List.append(LCD_Text)
+
+                    no_of_msgs += 1
+                    if no_of_msgs == 8:  break
+
+            else:
+                exit += 1
+
+
+        if exit == 15: return ["no_msg"]
+        time.sleep(0.0025)
+
+    return LCD_Text_List
+
+
+def get_totalmix_setup():
+
+    row_up = 0x29
+    row_dn = 0x28
+    bk_up = 0x2F
+    bk_dn = 0x2E
+    bank_now = False
+    bank_dn = True
+    bank_up = False
+    start_writing = False
+    index = 0
+
+    totalmix_channels_list = []
+    LCD_Text_old = []
+
+    while True:
+
+        if not bank_now: midiout.send_message([0x80, row_up, 0])
+        if bank_now:
+            if bank_dn: midiout.send_message([0x80, bk_dn, 0])
+            elif bank_up: midiout.send_message([0x80, bk_up, 0])
+
+        LCD_Text = get_lcd_text()
+        print(LCD_Text)
+
+        if LCD_Text[0][:1] == "AN":
+
+            bank_now = True
+
+            if LCD_Text_old[0] == LCD_Text[0]:
+                bank_up = True
+                bank_dn = False
+                start_writing = True
+
+            LCD_Text_old = LCD_Text
+
+            if start_writing:
+                totalmix_channels_list.append(LCD_Text)
+                index += 1
+
+            if index == 5: break
+
+
+
+
+
+    return totalmix_channels_list
+
+
+
 
 def reset_banking():
 
@@ -65,6 +153,9 @@ def reset_banking():
         time.sleep(0.0025)
 
     return LCD_Text, 1
+
+
+
 
 
 
@@ -266,7 +357,15 @@ if saving:
         text_file.write("%s\n%s\n%s\n" % (portin0, portin1, portout))
 
 
+
+
+totalmix_setup = get_totalmix_setup()
+print(totalmix_setup)
+#LCD_List = get_lcd_text()
+#print(LCD_List)
+
 #LCD_Text, current_bank = reset_banking()
+
 
 try:
 
@@ -387,7 +486,7 @@ try:
                                     midiout.send_message(msgout)
                                     print(msgout)
 
-                        break
+                        #break
 
         if msg_totalmix:
 
