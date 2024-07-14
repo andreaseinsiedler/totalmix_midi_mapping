@@ -32,8 +32,48 @@ output_solo_dict = commands[3]
 output_mute_dict = commands[4]
 output_bank_dict = commands[5]
 
+'''Functions'''
+
+
+
+def _prompt_for_choice(question):
+    """Prompt on the console for y/N."""
+    return input("%s (y/N)\n" %question).strip().lower() in ['y', 'yes']
+
 
 def get_lcd_text():
+
+    no_of_msgs = 0
+    LCD_Text_List = []
+    exit = 0
+
+    while True:
+
+        msg_totalmix = midiin_totalmix.get_message()
+
+        if msg_totalmix:
+
+            message, deltatime = msg_totalmix
+
+            if lcd_header == message[:6]:
+
+                LCD_Text = ""
+                for num in message[7:-1]: LCD_Text += chr(num)
+                LCD_Text_List.append(LCD_Text)
+
+                no_of_msgs += 1
+                if no_of_msgs == 1:  break
+
+            else:
+                exit += 1
+
+
+        if exit == 15: return ["no_msg"]
+        time.sleep(0.0025)
+
+    return LCD_Text_List
+
+def get_full_lcd_text():
 
     no_of_msgs = 0
     LCD_Text_List = []
@@ -70,56 +110,63 @@ def get_lcd_text():
 
     return LCD_Text_List
 
-
 def get_totalmix_setup():
 
     row_up = 0x29
     row_dn = 0x28
     bk_up = 0x2F
     bk_dn = 0x2E
-    bank_now = False
+    change_row = False
     bank_dn = True
     bank_up = False
     start_writing = False
     index = 0
-
     totalmix_channels_list = []
     LCD_Text_old = []
 
-    while True:
+    question = "Please disable full LCD support in Totalmix."
+    do_it = _prompt_for_choice(question)
 
-        if not bank_now: midiout.send_message([0x80, row_up, 0])
-        if bank_now:
-            if bank_dn: midiout.send_message([0x80, bk_dn, 0])
-            elif bank_up: midiout.send_message([0x80, bk_up, 0])
+    if do_it: reset_banking()
+    else: return False
 
-        LCD_Text = get_lcd_text()
-        print(LCD_Text)
+    question = "Please enable full LCD support in Totalmix."
+    do_it = _prompt_for_choice(question)
 
-        if LCD_Text[0][:1] == "AN":
+    if do_it:
 
-            bank_now = True
+        while True:
 
-            if LCD_Text_old[0] == LCD_Text[0]:
-                bank_up = True
-                bank_dn = False
-                start_writing = True
+            if not bank_now: midiout.send_message([0x80, row_up, 0])
+            if bank_now:
+                if bank_dn: midiout.send_message([0x80, bk_dn, 0])
+                elif bank_up: midiout.send_message([0x80, bk_up, 0])
 
-            LCD_Text_old = LCD_Text
+            LCD_Text = get_full_lcd_text()
+            print(LCD_Text)
 
-            if start_writing:
-                totalmix_channels_list.append(LCD_Text)
-                index += 1
+            if LCD_Text[0][:1] == "AN":
 
-            if index == 5: break
+                bank_now = True
+
+                if LCD_Text_old[0] == LCD_Text[0]:
+                    bank_up = True
+                    bank_dn = False
+                    start_writing = True
+
+                LCD_Text_old = LCD_Text
+
+                if start_writing:
+                    totalmix_channels_list.append(LCD_Text)
+                    index += 1
+
+                if index == 5: break
 
 
 
+    print(totalmix_channels_list)
 
-
-    return totalmix_channels_list
-
-
+    return True
 
 
 def reset_banking():
@@ -155,13 +202,84 @@ def reset_banking():
     return LCD_Text, 1
 
 
+def change_row_and_bank(current_pos, next_pos, current_bank, next_bank):
+
+    if current_pos[:2] == next_pos[:2] and current_bank == next_bank: return current_pos, current_bank
+
+    row_up = 0x29
+    row_dn = 0x28
+    bk_up = 0x2F
+    bk_dn = 0x2E
+    change_row = True
+    change_bank = True
+    return_flag = False
+
+    print("current_pos:",current_pos, "next_pos:", next_pos, "current_bank:", current_bank, "next_bank:", next_bank)
 
 
 
+    while True:
 
-def _prompt_for_choice(question):
-    """Prompt on the console for y/N."""
-    return input("%s (y/N)\n" %question).strip().lower() in ['y', 'yes']
+        if current_pos[:2] == next_pos[:2] and current_bank == next_bank and not return_flag:
+
+            return_flag = True
+            print("early return")
+
+        if current_pos[:2] == next_pos[:2]: change_row = False
+        if current_bank == next_bank: change_bank = False
+
+        if change_row:
+            print("row")
+            if next_pos[:2] == "In" and current_pos[:2] == "Pb": command = row_up
+            elif next_pos[:2] == "Pb" and current_pos[:2] == "Ou": command = row_up
+            elif next_pos[:2] == "Ou" and current_pos[:2] == "In": command = row_up
+            elif next_pos[:2] == "In" and current_pos[:2] == "Ou": command = row_dn
+            elif next_pos[:2] == "Pb" and current_pos[:2] == "In": command = row_dn
+            elif next_pos[:2] == "Ou" and current_pos[:2] == "Pb": command = row_dn
+
+            midiout.send_message([NOTE_OFF | 0, command, 0])
+
+            change_row = False
+            change_bank = False
+
+
+        elif change_bank:
+            print("elif")
+            if current_bank > next_bank:
+                command = bk_dn
+                current_bank -= 1
+
+            elif current_bank < next_bank:
+                command = bk_up
+                current_bank += 1
+            print(current_bank)
+            midiout.send_message([NOTE_OFF | 0, command, 0])
+
+            change_bank = False
+            change_row = False
+
+
+        msg_totalmix = midiin_totalmix.get_message()
+
+        if msg_totalmix:
+
+            message, deltatime = msg_totalmix
+            print(message)
+            if lcd_header == message[:6]:
+
+
+                current_pos = ""
+                for num in message[7:-1]: current_pos += chr(num)
+
+                print("current_pos", current_pos)
+
+                change_bank = True
+                change_row = True
+                print(return_flag)
+                if return_flag: break
+
+
+        time.sleep(0.025)
 
 
 def change_row_and_bank(current_pos, next_pos, current_bank, next_bank):
@@ -250,13 +368,7 @@ def change_row_and_bank(current_pos, next_pos, current_bank, next_bank):
     return current_pos, current_bank
 
 
-
-
-
-
-
-
-#MAIN
+'''Main'''
 
 print("\n##########################################################################\nTotalMix Midi Mapping v0.1 (2024)\nOpen Source Midi Mapping for TotalMix from RME\nHacking the MackieControl-Implementation for absolute Midi Mapping.\nBuilt with python 3.9, python-rtmidi, pyinstaller\nAuthor: andreaseinsiedler\nhttps://github.com/andreaseinsiedler/totalmix_midi_mapping\n##########################################################################")
 
@@ -359,12 +471,18 @@ if saving:
 
 
 
-totalmix_setup = get_totalmix_setup()
-print(totalmix_setup)
-#LCD_List = get_lcd_text()
-#print(LCD_List)
+#totalmix_setup = get_totalmix_setup()
+#print(totalmix_setup)
+midiout.send_message([0x80, 0x29, 0])
+LCD_List = get_lcd_text()
+print(LCD_List)
 
 #LCD_Text, current_bank = reset_banking()
+
+question = "Do you want to load the Channel Names from Totalmix?"
+load_channels = _prompt_for_choice(question)
+
+if load_channels: get_totalmix_setup()
 
 
 try:

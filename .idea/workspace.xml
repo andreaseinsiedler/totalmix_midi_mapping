@@ -4,11 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="544ca33c-d5fd-4e42-81e7-6baa9b0f3573" name="Default Changelist" comment="split cc and note data into seperate csv, in middle of changing the indexing because faders are also banked, i thought they were absolute mappings">
-      <change afterPath="$PROJECT_DIR$/get_totalmix_setup.py" afterDir="false" />
+    <list default="true" id="544ca33c-d5fd-4e42-81e7-6baa9b0f3573" name="Default Changelist" comment="trying to get the full lcd screen text for easier banking, doesnt quite work out because all rows are now named the same">
+      <change afterPath="$PROJECT_DIR$/totalmix_midi_mapping old.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MidiConfig.txt" beforeDir="false" afterPath="$PROJECT_DIR$/MidiConfig.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/get_totalmix_setup.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/totalmix_midi_mapping - matrix.csv" beforeDir="false" afterPath="$PROJECT_DIR$/totalmix_midi_mapping - matrix.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/totalmix_midi_mapping new.py" beforeDir="false" afterPath="$PROJECT_DIR$/totalmix_midi_mapping new.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/totalmix_midi_mapping.py" beforeDir="false" afterPath="$PROJECT_DIR$/totalmix_midi_mapping.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +79,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="totalmix_midi_mapping" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="totalmix_midi_mapping old" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="totalmix_midi_mapping" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -91,7 +93,7 @@
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/totalmix_midi_mapping.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\hello\PycharmProjects\totalmix_midi_mapping\totalmix_midi_mapping old.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -103,7 +105,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.totalmix_midi_mapping new" />
-        <item itemvalue="Python.totalmix_midi_mapping" />
+        <item itemvalue="Python.totalmix_midi_mapping old" />
       </list>
     </recent_temporary>
   </component>
@@ -147,13 +149,22 @@
       <option name="project" value="LOCAL" />
       <updated>1720817107623</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="trying to get the full lcd screen text for easier banking, doesnt quite work out because all rows are now named the same">
+      <option name="closed" value="true" />
+      <created>1720900074885</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1720900074885</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="started implement banking - not working right now" />
     <MESSAGE value="banking finished, bug after submix change fixed with little delay after sent midi message" />
     <MESSAGE value="split cc and note data into seperate csv, in middle of changing the indexing because faders are also banked, i thought they were absolute mappings" />
-    <option name="LAST_COMMIT_MESSAGE" value="split cc and note data into seperate csv, in middle of changing the indexing because faders are also banked, i thought they were absolute mappings" />
+    <MESSAGE value="trying to get the full lcd screen text for easier banking, doesnt quite work out because all rows are now named the same" />
+    <option name="LAST_COMMIT_MESSAGE" value="trying to get the full lcd screen text for easier banking, doesnt quite work out because all rows are now named the same" />
   </component>
 </project>
