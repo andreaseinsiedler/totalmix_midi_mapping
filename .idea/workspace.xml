@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="544ca33c-d5fd-4e42-81e7-6baa9b0f3573" name="Default Changelist" comment="trying to get the full lcd screen text for easier banking, doesnt quite work out because all rows are now named the same">
-      <change afterPath="$PROJECT_DIR$/totalmix_midi_mapping old.py" afterDir="false" />
+    <list default="true" id="544ca33c-d5fd-4e42-81e7-6baa9b0f3573" name="Default Changelist" comment="cleaning up">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/get_totalmix_setup.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Deny Info from RME Forum" beforeDir="false" afterPath="$PROJECT_DIR$/Info/Deny from RME Forum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MidiConfig.txt" beforeDir="false" afterPath="$PROJECT_DIR$/MidiConfig.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/totalmix_midi_mapping - matrix.csv" beforeDir="false" afterPath="$PROJECT_DIR$/totalmix_midi_mapping - matrix.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/totalmix_midi_mapping new.py" beforeDir="false" afterPath="$PROJECT_DIR$/totalmix_midi_mapping new.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/totalmix_midi_mapping.py" beforeDir="false" afterPath="$PROJECT_DIR$/totalmix_midi_mapping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/totalmix_midi_mapping_S_M.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/totalmix_midi_mapping_S_M.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,46 +39,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.totalmix_midi_mapping new.executor&quot;: &quot;Run&quot;,
-    &quot;Python.totalmix_midi_mapping.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/hello/PycharmProjects/totalmix_midi_mapping&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.totalmix_midi_mapping new.executor": "Run",
+    "Python.totalmix_midi_mapping old.executor": "Run",
+    "Python.totalmix_midi_mapping.executor": "Run",
+    "Python.totalmix_midi_mapping_S_M.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/hello/PycharmProjects/totalmix_midi_mapping",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\hello\PycharmProjects\totalmix_midi_mapping" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\hello\PycharmProjects\totalmix_midi_mapping\Info" />
+      <recent name="C:\Users\hello\PycharmProjects\totalmix_midi_mapping\dev" />
+    </key>
   </component>
-  <component name="RunManager" selected="Python.totalmix_midi_mapping new">
-    <configuration name="totalmix_midi_mapping new" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="totalmix_midi_mapping" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/totalmix_midi_mapping new.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python.totalmix_midi_mapping">
     <configuration name="totalmix_midi_mapping old" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="totalmix_midi_mapping" />
       <option name="ENV_FILES" value="" />
@@ -102,10 +86,55 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="totalmix_midi_mapping" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="totalmix_midi_mapping" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/totalmix_midi_mapping.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="totalmix_midi_mapping_S_M" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="totalmix_midi_mapping" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="C:\Users\hello\PycharmProjects\totalmix_midi_mapping\dev\totalmix_midi_mapping_S_M.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.totalmix_midi_mapping new" />
+        <item itemvalue="Python.totalmix_midi_mapping" />
         <item itemvalue="Python.totalmix_midi_mapping old" />
+        <item itemvalue="Python.totalmix_midi_mapping_S_M" />
       </list>
     </recent_temporary>
   </component>
@@ -157,7 +186,23 @@
       <option name="project" value="LOCAL" />
       <updated>1720900074885</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="finishing without Mute and Solo functionality. banking too convoluted at the moment, no time and motivation at the moment">
+      <option name="closed" value="true" />
+      <created>1720946944767</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1720946944767</updated>
+    </task>
+    <task id="LOCAL-00006" summary="cleaning up">
+      <option name="closed" value="true" />
+      <created>1720947031041</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1720947031041</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -165,6 +210,8 @@
     <MESSAGE value="banking finished, bug after submix change fixed with little delay after sent midi message" />
     <MESSAGE value="split cc and note data into seperate csv, in middle of changing the indexing because faders are also banked, i thought they were absolute mappings" />
     <MESSAGE value="trying to get the full lcd screen text for easier banking, doesnt quite work out because all rows are now named the same" />
-    <option name="LAST_COMMIT_MESSAGE" value="trying to get the full lcd screen text for easier banking, doesnt quite work out because all rows are now named the same" />
+    <MESSAGE value="finishing without Mute and Solo functionality. banking too convoluted at the moment, no time and motivation at the moment" />
+    <MESSAGE value="cleaning up" />
+    <option name="LAST_COMMIT_MESSAGE" value="cleaning up" />
   </component>
 </project>
