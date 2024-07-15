@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="544ca33c-d5fd-4e42-81e7-6baa9b0f3573" name="Default Changelist" comment="added info files and external files for one folder bundle">
-      <change beforePath="$PROJECT_DIR$/Info/Logic Control MidiImplementations(Begins at pg. 105).pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Info/Logic7_DedicatedCntrlSurfaceInfo Page 239.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Info/Mackie Control MIDI Map.pdf" beforeDir="false" />
+    <list default="true" id="544ca33c-d5fd-4e42-81e7-6baa9b0f3573" name="Default Changelist" comment="added more info files - now i push them really">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,7 +185,23 @@
       <option name="project" value="LOCAL" />
       <updated>1721033748005</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="added more info files">
+      <option name="closed" value="true" />
+      <created>1721034544544</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1721034544544</updated>
+    </task>
+    <task id="LOCAL-00012" summary="added more info files - now i push them really">
+      <option name="closed" value="true" />
+      <created>1721034566935</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1721034566935</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -200,6 +215,8 @@
     <MESSAGE value="ready to build one folder bundle" />
     <MESSAGE value="little fix for Talkback" />
     <MESSAGE value="added info files and external files for one folder bundle" />
-    <option name="LAST_COMMIT_MESSAGE" value="added info files and external files for one folder bundle" />
+    <MESSAGE value="added more info files" />
+    <MESSAGE value="added more info files - now i push them really" />
+    <option name="LAST_COMMIT_MESSAGE" value="added more info files - now i push them really" />
   </component>
 </project>
