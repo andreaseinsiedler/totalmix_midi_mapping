@@ -1,6 +1,6 @@
-# totalmix_midi_mapping
+# RME TotalMix Midi Mapping
+
 Midi Mapping for RME TotalMix
-(Version 1.0)
 
 The Midi Implementation of TotalMix is based on Mackie Protocol, which makes it impossible to have absolute mappings, everything is relative and mapped in banks of 8.
 
@@ -10,15 +10,19 @@ The problem is, that if you map the Channel Volumes it always depends on the sel
 
 With this Script you can map your Midi Controller to a Channel Volume for a specific Submix. It basically changes to the required Submix, before sending the Midi Data.
 
-Installation:
+## Installation:
 
-Download the appropriate Zip-File for you OS.
+Download the appropriate Zip-File for you OS and unzip it. 
+- [Releases](https://github.com/andreaseinsiedler/totalmix_midi_mapping/releases) - latest builds of the script
 
-For Windows: Start the Script with the Open_totalmix_midi_mapping_with_error_display.bat
 
-For Mac: 
+The app is portable and should be started the following way:
 
-Usage:
+for Windows: start the script with the Open_totalmix_midi_mapping_with_error_display.bat
+
+for Mac: just start totalmix_midi_mapping
+
+## Usage:
 
 The Mapping - Matrix is stored in a csv File (totalmix_midi_mapping - matrix.csv)
 All the Midi Commands are also stored in a csv File (totalmix_midi_mapping - commands.csv)
