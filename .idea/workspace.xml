@@ -4,9 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="544ca33c-d5fd-4e42-81e7-6baa9b0f3573" name="Default Changelist" comment="ready to build one folder bundle">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/totalmix_midi_mapping.py" beforeDir="false" afterPath="$PROJECT_DIR$/totalmix_midi_mapping.py" afterDir="false" />
+    <list default="true" id="544ca33c-d5fd-4e42-81e7-6baa9b0f3573" name="Default Changelist" comment="added info files and external files for one folder bundle">
+      <change afterPath="$PROJECT_DIR$/Info/Logic Control MidiImplementations(Begins at pg. 105).pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Info/Logic7_DedicatedCntrlSurfaceInfo Page 239.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Info/Mackie Control MIDI Map.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Info/mackie_control_protocol_software_mappings.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist-external-files/MidiConfig.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist-external-files/Open_totalmix_midi_mapping_with_error_display.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist-external-files/totalmix_midi_mapping - commands.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist-external-files/totalmix_midi_mapping - matrix.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -216,7 +222,23 @@
       <option name="project" value="LOCAL" />
       <updated>1721032038132</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="little fix for Talkback">
+      <option name="closed" value="true" />
+      <created>1721033562793</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1721033562793</updated>
+    </task>
+    <task id="LOCAL-00010" summary="added info files and external files for one folder bundle">
+      <option name="closed" value="true" />
+      <created>1721033748005</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1721033748005</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -228,6 +250,8 @@
     <MESSAGE value="cleaning up" />
     <MESSAGE value="cleaned up the code, fixed saving for windows, removed all input from totalmix" />
     <MESSAGE value="ready to build one folder bundle" />
-    <option name="LAST_COMMIT_MESSAGE" value="ready to build one folder bundle" />
+    <MESSAGE value="little fix for Talkback" />
+    <MESSAGE value="added info files and external files for one folder bundle" />
+    <option name="LAST_COMMIT_MESSAGE" value="added info files and external files for one folder bundle" />
   </component>
 </project>

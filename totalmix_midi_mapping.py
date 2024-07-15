@@ -225,10 +225,7 @@ finally:
 
     midiin_external.close_port()
     print("Midi In 1 closed")
-    midiin_totalmix.close_port()
-    print("Midi In 2 closed")
     del midiin_external
-    del midiin_totalmix
     print("Exit.")
 
 
