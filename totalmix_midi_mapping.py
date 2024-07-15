@@ -118,7 +118,6 @@ if saving:
     with open(midiconfig_path, "w") as text_file:
         text_file.write("%s\n%s\n" % (port_no_in_external, port_no_out))
 
-
 try:
 
     timer = time.time()
@@ -168,8 +167,8 @@ try:
                                     output_type = NOTE_OFF
                                     output_CC_or_Note = int(output_CC_dict[key], 16)
 
-                                    output_type_string = "Note_Off"
-                                    output_value = passed_value
+                                    output_type_string = "Note_OFF"
+                                    output_value = 0
 
                                     if message[2] > 0: send = True
 
@@ -177,22 +176,20 @@ try:
                                         if deltatime < 1: send = False
                                         else: send = True
 
-                                        print("Button Held for :", deltatime)
-
-
                                 elif value == "Map":
 
                                     output_CC_or_Note = int(output_CC_dict[key], 16)
-                                    output_type_string = "Note_Off"
+                                    output_type_string = "Note_OFF"
                                     output_value = message[2]
+
                                     if message[2] > 0:
                                         send = False
                                         output_type = NOTE_ON
 
+
                                     if message[2] == 0:
                                         output_type = NOTE_OFF
                                         send = True
-
 
                                 else:
                                     if output_submix_dict[value]: submix = int(output_submix_dict[value], 16)
@@ -203,14 +200,11 @@ try:
                                     change_submix = True
                                     send = True
 
-
                                 if change_submix:
                                     if submix != submix_prev:
                                         midiout.send_message([0xBC, submix, 50])
                                         #time.sleep(0.05)
                                         submix_prev = submix
-
-
 
                                 if send:
 
