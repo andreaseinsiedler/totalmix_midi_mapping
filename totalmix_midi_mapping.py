@@ -4,7 +4,7 @@ import time
 import csv
 import os
 
-from rtmidi.midiutil import open_midiinput, open_midioutput
+from midiutil_mod import open_midiinput, open_midioutput
 from rtmidi.midiconstants import NOTE_OFF, NOTE_ON, CONTROL_CHANGE
 
 if getattr(sys, 'frozen', False): bundle_dir = os.path.dirname(sys.executable)  # we are running in a bundle
@@ -74,8 +74,8 @@ if not loading:
 port = None
 
 try:
-    if not loading: midiin_external, port_name_in_external = open_midiinput(port)
-    if loading: midiin_external, port_name_in_external = open_midiinput(ports_saved[0])
+    if not loading: midiin_external, port_name_in_external, port_no_in_external = open_midiinput(port)
+    if loading: midiin_external, port_name_in_external, port_no_in_external = open_midiinput(ports_saved[0])
 
 except (EOFError, KeyboardInterrupt):
     sys.exit()
@@ -95,8 +95,8 @@ if not loading:
 port = sys.argv[1] if len(sys.argv) > 1 else None
 
 try:
-    if not loading: midiout, port_name_out = open_midioutput(port)
-    if loading: midiout, port_name_out = open_midioutput(ports_saved[1])
+    if not loading: midiout, port_name_out, port_no_out = open_midioutput(port)
+    if loading: midiout, port_name_out, port_no_out = open_midioutput(ports_saved[1])
 
 except (EOFError, KeyboardInterrupt):
     sys.exit()
@@ -116,7 +116,7 @@ if saving:
     print("Your setup was saved to MidiConfig.txt\n")
 
     with open(midiconfig_path, "w") as text_file:
-        text_file.write("%s\n%s\n" % (port_name_in_external[-1], port_name_out[-1]))
+        text_file.write("%s\n%s\n" % (port_no_in_external, port_no_out))
 
 
 try:
@@ -134,6 +134,7 @@ try:
             message, deltatime = msg_external
 
             send = False
+            mapped = False
             change_submix = False
 
             timer += deltatime
@@ -148,14 +149,6 @@ try:
 
                     if message[0] == CH+175 and message[1] == CC:
 
-                        input_index = row["Index"]
-                        input_label = row["Label"]
-                        input_CH = CH
-                        input_CC = CC
-                        input_value = message[2]
-
-                        #print("Input -> {} {} Ch: {} CC: {} Value: {}".format(row["Index"], row["Label"], CH, CC, message[2]))
-
                         if row["Value"] and row["Value"] != "x" and message[2] != 0:
                             passed_value = int(row["Value"])
                         else: passed_value = message[2]
@@ -167,7 +160,7 @@ try:
                         for key, value in routing_dict.items():
 
                             if value:
-
+                                mapped = True
                                 output_ch = int(output_CH_dict[key])
 
                                 if key == "Tlk_bk":
@@ -221,11 +214,11 @@ try:
 
                                 if send:
 
-                                    print("{} ({}) Ch:{:<2} CC:{:<3} Value:{:>3} -> Submix: {} ({}) -> {} ({}) Ch:{:<2} {}: {:<3} Value:{:>3}".format( input_label, input_index, input_CH, input_CC, input_value, output_label_dict[value], value, output_label_dict[key], key, output_ch, output_type_string, output_CC_or_Note, output_value))
+                                    print("{} ({}) Ch:{:<2} CC:{:<3} Value:{:>3} -> Submix: {} ({}) -> {} ({}) Ch:{:<2} {}: {:<3} Value:{:>3}".format( row["Label"], row["Index"], CH, CC, message[2], output_label_dict[value], value, output_label_dict[key], key, output_ch, output_type_string, output_CC_or_Note, output_value))
                                     msgout = ([output_type | output_ch, output_CC_or_Note, output_value])
                                     midiout.send_message(msgout)
 
-                        if not send: print("{} ({}) Ch:{:<2} CC:{:<3} Value:{:>3} -> nothing mapped".format(input_label, input_index, input_CH, input_CC, input_value))
+                        if not mapped: print("{} ({}) Ch:{:<2} CC:{:<3} Value:{:>3} -> nothing mapped".format(row["Label"], row["Index"], CH, CC, message[2]))
 
                         break
 
