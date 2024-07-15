@@ -5,14 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="544ca33c-d5fd-4e42-81e7-6baa9b0f3573" name="Default Changelist" comment="added info files and external files for one folder bundle">
-      <change afterPath="$PROJECT_DIR$/Info/Logic Control MidiImplementations(Begins at pg. 105).pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Info/Logic7_DedicatedCntrlSurfaceInfo Page 239.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Info/Mackie Control MIDI Map.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Info/mackie_control_protocol_software_mappings.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist-external-files/MidiConfig.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist-external-files/Open_totalmix_midi_mapping_with_error_display.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist-external-files/totalmix_midi_mapping - commands.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist-external-files/totalmix_midi_mapping - matrix.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Info/Logic Control MidiImplementations(Begins at pg. 105).pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Info/Logic7_DedicatedCntrlSurfaceInfo Page 239.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Info/Mackie Control MIDI Map.pdf" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +46,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/hello/PycharmProjects/totalmix_midi_mapping/dist/totalmix_midi_mapping/_internal",
+    "last_opened_file_path": "F:/Dropbox/Home/Projects/Midi Remote Scripts/Python/totalmix_midi_mapping",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
@@ -66,30 +61,7 @@
       <recent name="C:\Users\hello\PycharmProjects\totalmix_midi_mapping\dev" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.totalmix_midi_mapping">
-    <configuration name="totalmix_midi_mapping old" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="totalmix_midi_mapping" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="Python 3.9 (totalmix_midi_mapping)" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\hello\PycharmProjects\totalmix_midi_mapping\totalmix_midi_mapping old.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager">
     <configuration name="totalmix_midi_mapping" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="totalmix_midi_mapping" />
       <option name="ENV_FILES" value="" />
@@ -112,33 +84,9 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="totalmix_midi_mapping_S_M" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="totalmix_midi_mapping" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\hello\PycharmProjects\totalmix_midi_mapping\dev\totalmix_midi_mapping_S_M.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.totalmix_midi_mapping" />
-        <item itemvalue="Python.totalmix_midi_mapping old" />
-        <item itemvalue="Python.totalmix_midi_mapping_S_M" />
       </list>
     </recent_temporary>
   </component>
