@@ -1,0 +1,2 @@
+CALL totalmix_midi_mapping.exe
+PAUSE
