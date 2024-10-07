@@ -29,5 +29,11 @@ All the Midi Commands are also stored in a csv File (totalmix_midi_mapping - com
 
 For easier editing there are also xlsx versions of both files. There you have dropdown selection and color coding.
 
+-------------------------------------------
 
+That's how far i got for now (10-2024). Its working for me right now, needs some proofing for normal users. 
+
+Let me know if you are interested and i will get probably motivated to finish the beta release. 
+
+If you know what your doing you can run it in pycharm and it works a treat, just clone the rep and get your setup into the matrix.
 
