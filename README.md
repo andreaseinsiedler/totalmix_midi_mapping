@@ -27,13 +27,12 @@ for Mac: just start totalmix_midi_mapping
 The Mapping - Matrix is stored in a csv File (totalmix_midi_mapping - matrix.csv)
 All the Midi Commands are also stored in a csv File (totalmix_midi_mapping - commands.csv)
 
-For easier editing there are also xlsx versions of the matrix. There you have dropdown selection and color coding.
+For easier editing there are also xlsx versions of the matrix in the template folder. There you have dropdown selection and color coding.
 
--------------------------------------------
+The Matrix is expandable and you can tailor it to your needs both for your interface and your MIDI Controller.
 
-That's how far i got for now (10-2024). Its working for me, but needs some proofing for normal users. 
+The Script just work trough the matrix at every midi event and acts if it finds a binding to the received Channel and CC.
 
-Let me know if you are interested and i will get probably motivated to finish the beta release. 
+For Buttons you can define an ON Value that overrides the value what your MIDI Controller is sending.
 
-If you know what your doing you can run it in pycharm and it works a treat, just clone the rep and get your setup into the matrix.
-
+In the xlsx template file, the is an example of an routing for a nanoKontrol2 to a Fireface 800. 
