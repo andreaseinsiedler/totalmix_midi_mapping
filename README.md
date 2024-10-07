@@ -31,7 +31,7 @@ For easier editing there are also xlsx versions of both files. There you have dr
 
 -------------------------------------------
 
-That's how far i got for now (10-2024). Its working for me right now, needs some proofing for normal users. 
+That's how far i got for now (10-2024). Its working for me, but needs some proofing for normal users. 
 
 Let me know if you are interested and i will get probably motivated to finish the beta release. 
 
