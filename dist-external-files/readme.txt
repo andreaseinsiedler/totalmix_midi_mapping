@@ -6,13 +6,13 @@ The Midi Implementation of TotalMix is based on Mackie Protocol, which makes it 
 
 Luckily the Channel Volumes and a couple of other very important functions are also implemented as plain MIDI, which makes it easier to map it to your Midi Controller.
 
-The problem is, that if you map the Channel Volumes it always depends on the selected Submixes, what you are really controlling. 
+The problem is, that if you map the Channel Volumes it always depends on the selected Submixes, what you are really controlling.
 
 With this Script you can map your Midi Controller to a Channel Volume for a specific Submix. It basically changes to the required Submix, before sending the Midi Data.
 
 ## Installation:
 
-Download the appropriate Zip-File for you OS and unzip it. 
+Download the appropriate Zip-File for you OS and unzip it.
 - [Releases](https://github.com/andreaseinsiedler/totalmix_midi_mapping/releases) - latest builds of the script
 
 
@@ -31,9 +31,8 @@ For easier editing there are also xlsx versions of the matrix. There you have dr
 
 -------------------------------------------
 
-That's how far i got for now (10-2024). Its working for me, but needs some proofing for normal users. 
+That's how far i got for now (10-2024). Its working for me, but needs some proofing for normal users.
 
-Let me know if you are interested and i will get probably motivated to finish the beta release. 
+Let me know if you are interested and i will get probably motivated to finish the beta release.
 
 If you know what your doing you can run it in pycharm and it works a treat, just clone the rep and get your setup into the matrix.
-
