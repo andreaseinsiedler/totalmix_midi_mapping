@@ -159,58 +159,64 @@ try:
                         for key, value in routing_dict.items():
 
                             if value:
-                                mapped = True
-                                output_ch = int(output_CH_dict[key])
 
-                                if key == "Tlk_bk":
+                                value_list = value.split('+')
 
-                                    output_type = NOTE_OFF
-                                    output_CC_or_Note = int(output_CC_dict[key], 16)
+                                for value in value_list:
 
-                                    output_type_string = "Note_OFF"
-                                    output_value = 0
+                                    mapped = True
+                                    output_ch = int(output_CH_dict[key])
 
-                                    if message[2] > 0: send = True
+                                    if key == "Tlk_bk":
 
-                                    if message[2] == 0:
-                                        if deltatime < 1: send = False
-                                        else: send = True
-
-                                elif value == "Map":
-
-                                    output_CC_or_Note = int(output_CC_dict[key], 16)
-                                    output_type_string = "Note_OFF"
-                                    output_value = message[2]
-
-                                    if message[2] > 0:
-                                        send = False
-                                        output_type = NOTE_ON
-
-
-                                    if message[2] == 0:
                                         output_type = NOTE_OFF
+                                        output_CC_or_Note = int(output_CC_dict[key], 16)
+
+                                        output_type_string = "Note_OFF"
+                                        output_value = 0
+
+                                        if message[2] > 0: send = True
+
+                                        if message[2] == 0:
+                                            if deltatime < 1: send = False
+                                            else: send = True
+
+                                    elif value == "Map":
+
+                                        output_CC_or_Note = int(output_CC_dict[key], 16)
+                                        output_type_string = "Note_OFF"
+                                        output_value = message[2]
+
+                                        if message[2] > 0:
+                                            send = False
+                                            output_type = NOTE_ON
+
+
+                                        if message[2] == 0:
+                                            output_type = NOTE_OFF
+                                            send = True
+
+                                    else:
+                                        if output_submix_dict[value]: submix = int(output_submix_dict[value], 16)
+                                        output_type = CONTROL_CHANGE
+                                        output_type_string = "CC"
+                                        output_CC_or_Note = int(output_CC_dict[key])
+                                        output_value = passed_value
+                                        change_submix = True
                                         send = True
 
-                                else:
-                                    if output_submix_dict[value]: submix = int(output_submix_dict[value], 16)
-                                    output_type = CONTROL_CHANGE
-                                    output_type_string = "CC"
-                                    output_CC_or_Note = int(output_CC_dict[key])
-                                    output_value = passed_value
-                                    change_submix = True
-                                    send = True
 
-                                if change_submix:
-                                    if submix != submix_prev:
-                                        midiout.send_message([0xBC, submix, 50])
-                                        #time.sleep(0.05)
-                                        submix_prev = submix
+                                    if change_submix:
+                                        if submix != submix_prev:
+                                            midiout.send_message([0xBC, submix, 50])
+                                            #time.sleep(0.05)
+                                            submix_prev = submix
 
-                                if send:
+                                    if send:
 
-                                    print("{} ({}) Ch:{:<2} CC:{:<3} Value:{:>3} -> Submix: {} ({}) -> {} ({}) Ch:{:<2} {}: {:<3} Value:{:>3}".format( row["Label"], row["Index"], CH, CC, message[2], output_label_dict[value], value, output_label_dict[key], key, output_ch, output_type_string, output_CC_or_Note, output_value))
-                                    msgout = ([output_type | output_ch, output_CC_or_Note, output_value])
-                                    midiout.send_message(msgout)
+                                        print("{} ({}) Ch:{:<2} CC:{:<3} Value:{:>3} -> Submix: {} ({}) -> {} ({}) Ch:{:<2} {}: {:<3} Value:{:>3}".format( row["Label"], row["Index"], CH, CC, message[2], output_label_dict[value], value, output_label_dict[key], key, output_ch, output_type_string, output_CC_or_Note, output_value))
+                                        msgout = ([output_type | output_ch, output_CC_or_Note, output_value])
+                                        midiout.send_message(msgout)
 
                         if not mapped: print("{} ({}) Ch:{:<2} CC:{:<3} Value:{:>3} -> nothing mapped".format(row["Label"], row["Index"], CH, CC, message[2]))
 
